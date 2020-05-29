@@ -19,7 +19,7 @@ impl Vector {
         Self { x, y, z }
     }
 
-    fn length(&self) -> f64 {
+    pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
 
@@ -92,6 +92,15 @@ impl Vector {
             in_unit_sphere
         } else {
             -in_unit_sphere
+        }
+    }
+
+    pub fn random_in_unit_disk() -> Self {
+        loop {
+            let p = Self::new(random_in(-1.0, 1.0), random_in(-1.0, 1.0), 0.0);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
         }
     }
 
