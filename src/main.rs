@@ -1,6 +1,7 @@
 use rayon::prelude::*;
 
 use raytracer::core::{Point, Ray, Vector};
+use raytracer::objects::{HittableList, Sphere};
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
@@ -20,6 +21,10 @@ fn main() {
     let lower_left_corner =
         origin - horizontal / 2.0 - vertical / 2.0 - Vector::new(0.0, 0.0, focal_length);
 
+    let mut world = HittableList::new();
+    world.add(Box::new(Sphere::new(Point::new(0.0, 0.0, -1.0), 0.5)));
+    world.add(Box::new(Sphere::new(Point::new(0.0, -100.5, -1.0), 100.0)));
+
     for j in (0..image_height).rev() {
         eprint!("\rScanlines remaining: {:>3}", j);
 
@@ -28,12 +33,10 @@ fn main() {
             .map(|i| {
                 let u = i as f64 / (image_width as f64 - 1.0);
                 let v = j as f64 / (image_height as f64 - 1.0);
-                let ray = Ray::new(
-                    origin,
-                    lower_left_corner + horizontal * u + vertical * v - origin,
-                );
+                let ray = Ray::new(origin, lower_left_corner + horizontal * u + vertical * v);
 
-                ray.color().write_color()
+                let pixel_color = ray.color(&world);
+                pixel_color.write_color()
             })
             .reduce(
                 || String::new(),
