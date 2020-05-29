@@ -1,5 +1,7 @@
 use rayon::prelude::*;
 
+use raytracer::core::Color;
+
 fn main() {
     let image_width = 256;
     let image_height = 256;
@@ -16,11 +18,8 @@ fn main() {
                 let g = j as f64 / (image_height - 1) as f64;
                 let b = 0.25;
 
-                let ir = (255.999 * r) as u64;
-                let ig = (255.999 * g) as u64;
-                let ib = (255.999 * b) as u64;
-
-                format!("{} {} {}", ir, ig, ib)
+                let pixel_color = Color::new(r, g, b);
+                pixel_color.write_color()
             })
             .reduce(
                 || String::new(),
