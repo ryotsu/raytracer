@@ -1,5 +1,5 @@
 use super::Material;
-use crate::core::{Color, Ray, Vector};
+use crate::core::{Color, Ray};
 use crate::objects::HitRecord;
 use crate::utils::{random, schlick};
 

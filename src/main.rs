@@ -1,8 +1,7 @@
 use rayon::prelude::*;
 
 use raytracer::core::{Camera, Color, Point, Vector};
-use raytracer::materials::{Dielectric, Lambertian, Metal};
-use raytracer::objects::{HittableList, Sphere};
+use raytracer::scene;
 use raytracer::utils::random;
 
 fn main() {
@@ -14,38 +13,13 @@ fn main() {
 
     println!("P3\n {} {}\n255", image_width, image_height);
 
-    let mut world = HittableList::new();
-    world.add(Box::new(Sphere::new(
-        Point::new(0.0, 0.0, -1.0),
-        0.5,
-        Box::new(Lambertian::new(Color::new(0.1, 0.2, 0.5))),
-    )));
-    world.add(Box::new(Sphere::new(
-        Point::new(0.0, -100.5, -1.0),
-        100.0,
-        Box::new(Lambertian::new(Color::new(0.8, 0.8, 0.0))),
-    )));
-    world.add(Box::new(Sphere::new(
-        Point::new(1.0, 0.0, -1.0),
-        0.5,
-        Box::new(Metal::new(Color::new(0.8, 0.6, 0.2), 0.0)),
-    )));
-    world.add(Box::new(Sphere::new(
-        Point::new(-1.0, 0.0, -1.0),
-        0.5,
-        Box::new(Dielectric::new(1.5)),
-    )));
-    world.add(Box::new(Sphere::new(
-        Point::new(-1.0, 0.0, -1.0),
-        -0.45,
-        Box::new(Dielectric::new(1.5)),
-    )));
+    let world = scene::random_scene();
 
-    let look_from = Point::new(3.0, 3.0, 2.0);
-    let look_at = Point::new(0.0, 0.0, -1.0);
+    let look_from = Point::new(13.0, 2.0, 3.0);
+    let look_at = Point::new(0.0, 0.0, 0.0);
     let vup = Vector::new(0.0, 1.0, 0.0);
-    let dist_to_focus = (look_from - look_at).length();
-    let aperture = 2.0;
+    let dist_to_focus = 10.0;
+    let aperture = 0.1;
 
     let camera = Camera::new(
         look_from,
