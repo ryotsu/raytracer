@@ -1,5 +1,6 @@
-use crate::utils::clamp;
+use crate::utils::{clamp, random, random_in};
 
+use std::f64::consts::PI;
 use std::fmt;
 use std::ops;
 
@@ -42,14 +43,58 @@ impl Vector {
         self / self.length()
     }
 
+    pub fn random() -> Self {
+        Self {
+            x: random(),
+            y: random(),
+            z: random(),
+        }
+    }
+
+    pub fn random_in(min: f64, max: f64) -> Self {
+        Self {
+            x: random_in(min, max),
+            y: random_in(min, max),
+            z: random_in(min, max),
+        }
+    }
+
+    pub fn random_in_unit_sphere() -> Self {
+        loop {
+            let p = Self::random_in(-1.0, 1.0);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
+
+    pub fn random_unit_vector() -> Self {
+        let a = random_in(0.0, 2.0 * PI);
+        let z = random_in(-1.0, 1.0);
+        let r = (1.0 - z * z).sqrt();
+        Self::new(r * a.cos(), r * a.sin(), z)
+    }
+
+    pub fn random_in_hemisphere(normal: Self) -> Self {
+        let in_unit_sphere = Self::random_in_unit_sphere();
+        if in_unit_sphere.dot(normal) > 0.0 {
+            in_unit_sphere
+        } else {
+            -in_unit_sphere
+        }
+    }
+
     pub fn write_color(&self, samples_per_pixel: usize) -> String {
         let scale = 1.0 / samples_per_pixel as f64;
-        let new = self * scale;
+        let r = (self.x * scale).sqrt();
+        let g = (self.y * scale).sqrt();
+        let b = (self.z * scale).sqrt();
+
         format!(
             "{} {} {}",
-            (256.0 * clamp(new.x, 0.0, 0.999)) as u8,
-            (256.0 * clamp(new.y, 0.0, 0.999)) as u8,
-            (256.0 * clamp(new.z, 0.0, 0.999)) as u8
+            (256.0 * clamp(r, 0.0, 0.999)) as u8,
+            (256.0 * clamp(g, 0.0, 0.999)) as u8,
+            (256.0 * clamp(b, 0.0, 0.999)) as u8
         )
     }
 }

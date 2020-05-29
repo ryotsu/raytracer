@@ -9,6 +9,7 @@ fn main() {
     let image_width = 384 as u16;
     let image_height = (image_width as f64 / aspect_ratio) as u16;
     let samples_per_pixel = 100;
+    let max_depth = 50;
 
     println!("P3\n {} {}\n255", image_width, image_height);
 
@@ -29,7 +30,7 @@ fn main() {
                     let u = (i as f64 + random()) / (image_width as f64 - 1.0);
                     let v = (j as f64 + random()) / (image_height as f64 - 1.0);
                     let ray = camera.ray(u, v);
-                    pixel_color += ray.color(&world);
+                    pixel_color += ray.color(&world, max_depth);
                 }
                 pixel_color.write_color(samples_per_pixel)
             })

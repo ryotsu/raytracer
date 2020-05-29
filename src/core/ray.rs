@@ -18,11 +18,16 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    pub fn color<T: Hittable>(&self, world: &T) -> Color {
+    pub fn color<T: Hittable>(&self, world: &T, depth: i8) -> Color {
+        if depth <= 0 {
+            return Color::new(0.0, 0.0, 0.0);
+        }
+
         let mut rec = HitRecord::new();
 
-        if world.hit(self, 0.0, INFINITY, &mut rec) {
-            return (rec.normal + Color::new(1.0, 1.0, 1.0)) * 0.5;
+        if world.hit(self, 0.001, INFINITY, &mut rec) {
+            let target = rec.p + Point::random_in_hemisphere(rec.normal);
+            return Ray::new(rec.p, target - rec.p).color(world, depth - 1) * 0.5;
         }
 
         let unit_direction = self.direction.unit_vector();
