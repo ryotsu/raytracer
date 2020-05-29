@@ -24,3 +24,9 @@ pub fn clamp(x: f64, min: f64, max: f64) -> f64 {
         x
     }
 }
+
+pub fn schlick(cos: f64, ref_index: f64) -> f64 {
+    let mut r0 = (1.0 - ref_index) / (1.0 + ref_index);
+    r0 = r0 * r0;
+    r0 + (1.0 - r0) * (1.0 - cos).powi(5)
+}

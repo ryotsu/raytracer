@@ -1,9 +1,11 @@
+mod dielectric;
 mod lambertian;
 mod metal;
 
 use crate::core::{Color, Ray};
 use crate::objects::HitRecord;
 
+pub use dielectric::Dielectric;
 pub use lambertian::Lambertian;
 pub use metal::Metal;
 

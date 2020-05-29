@@ -47,6 +47,13 @@ impl Vector {
         self - normal * self.dot(normal) * 2.0
     }
 
+    pub fn refract(&self, normal: Self, etai_over_etat: f64) -> Self {
+        let cos_theta = (-*self).dot(normal);
+        let r_out_parallel = (*self + normal * cos_theta) * etai_over_etat;
+        let r_out_perpendicular = normal * -(1.0 - r_out_parallel.length_squared()).sqrt();
+        r_out_parallel + r_out_perpendicular
+    }
+
     pub fn random() -> Self {
         Self {
             x: random(),

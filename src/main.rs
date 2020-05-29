@@ -1,7 +1,7 @@
 use rayon::prelude::*;
 
 use raytracer::core::{Camera, Color, Point};
-use raytracer::materials::{Lambertian, Metal};
+use raytracer::materials::{Dielectric, Lambertian, Metal};
 use raytracer::objects::{HittableList, Sphere};
 use raytracer::utils::random;
 
@@ -18,7 +18,7 @@ fn main() {
     world.add(Box::new(Sphere::new(
         Point::new(0.0, 0.0, -1.0),
         0.5,
-        Box::new(Lambertian::new(Color::new(0.7, 0.3, 0.3))),
+        Box::new(Lambertian::new(Color::new(0.1, 0.2, 0.5))),
     )));
     world.add(Box::new(Sphere::new(
         Point::new(0.0, -100.5, -1.0),
@@ -28,12 +28,17 @@ fn main() {
     world.add(Box::new(Sphere::new(
         Point::new(1.0, 0.0, -1.0),
         0.5,
-        Box::new(Metal::new(Color::new(0.8, 0.6, 0.2), 1.0)),
+        Box::new(Metal::new(Color::new(0.8, 0.6, 0.2), 0.0)),
     )));
     world.add(Box::new(Sphere::new(
         Point::new(-1.0, 0.0, -1.0),
         0.5,
-        Box::new(Metal::new(Color::new(0.8, 0.8, 0.8), 0.3)),
+        Box::new(Dielectric::new(1.5)),
+    )));
+    world.add(Box::new(Sphere::new(
+        Point::new(-1.0, 0.0, -1.0),
+        -0.45,
+        Box::new(Dielectric::new(1.5)),
     )));
 
     let camera = Camera::new();
