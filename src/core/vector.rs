@@ -24,7 +24,7 @@ impl Vector {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
-    fn dot(&self, v: Vector) -> f64 {
+    pub fn dot(&self, v: Vector) -> f64 {
         self.x * v.x + self.y * v.y + self.z * v.z
     }
 

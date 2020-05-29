@@ -2,8 +2,8 @@ use super::{Color, Point, Vector};
 
 #[derive(Debug)]
 pub struct Ray {
-    origin: Point,
-    direction: Vector,
+    pub origin: Point,
+    pub direction: Vector,
 }
 
 impl Ray {
@@ -16,6 +16,10 @@ impl Ray {
     }
 
     pub fn color(&self) -> Color {
+        if crate::hit_sphere(Point::new(0.0, 0.0, -1.0), 0.5, self) {
+            return Color::new(1.0, 0.0, 0.0);
+        }
+
         let unit_direction = self.direction.unit_vector();
 
         let t = (unit_direction.y + 1.0) * 0.5;
