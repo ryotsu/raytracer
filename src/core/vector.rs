@@ -1,3 +1,5 @@
+use crate::utils::clamp;
+
 use std::fmt;
 use std::ops;
 
@@ -40,9 +42,15 @@ impl Vector {
         self / self.length()
     }
 
-    pub fn write_color(&self) -> String {
-        let new = self * 255.999;
-        format!("{} {} {}", new.x as u64, new.y as u64, new.z as u64)
+    pub fn write_color(&self, samples_per_pixel: usize) -> String {
+        let scale = 1.0 / samples_per_pixel as f64;
+        let new = self * scale;
+        format!(
+            "{} {} {}",
+            (256.0 * clamp(new.x, 0.0, 0.999)) as u8,
+            (256.0 * clamp(new.y, 0.0, 0.999)) as u8,
+            (256.0 * clamp(new.z, 0.0, 0.999)) as u8
+        )
     }
 }
 
