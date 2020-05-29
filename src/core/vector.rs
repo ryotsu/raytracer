@@ -31,11 +31,11 @@ impl Vector {
         self.x * v.x + self.y * v.y + self.z * v.z
     }
 
-    fn cross(&self, v: Vector) -> Self {
+    pub fn cross(&self, v: Vector) -> Self {
         Self {
             x: self.y * v.z - self.z * v.y,
             y: self.z * v.x - self.x * v.z,
-            z: self.x * v.y - self.y * v.z,
+            z: self.x * v.y - self.y * v.x,
         }
     }
 

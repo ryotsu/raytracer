@@ -1,6 +1,6 @@
 use rayon::prelude::*;
 
-use raytracer::core::{Camera, Color, Point};
+use raytracer::core::{Camera, Color, Point, Vector};
 use raytracer::materials::{Dielectric, Lambertian, Metal};
 use raytracer::objects::{HittableList, Sphere};
 use raytracer::utils::random;
@@ -41,7 +41,13 @@ fn main() {
         Box::new(Dielectric::new(1.5)),
     )));
 
-    let camera = Camera::new();
+    let camera = Camera::new(
+        Point::new(-2.0, 2.0, 1.0),
+        Point::new(0.0, 0.0, -1.0),
+        Vector::new(0.0, 1.0, 0.0),
+        20.0,
+        aspect_ratio,
+    );
 
     for j in (0..image_height).rev() {
         eprint!("\rScanlines remaining: {:>3}", j);
