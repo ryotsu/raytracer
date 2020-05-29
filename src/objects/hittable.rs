@@ -1,13 +1,16 @@
-use crate::core::{Point, Ray, Vector};
+use crate::core::{Color, Point, Ray, Vector};
+use crate::materials::{Lambertian, Material};
+
+use std::mem;
 
 pub trait Hittable: Send + Sync {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
 }
 
-#[derive(Clone)]
 pub struct HitRecord {
     pub p: Point,
     pub normal: Vector,
+    pub material: Box<dyn Material>,
     pub t: f64,
     pub front_face: bool,
 }
@@ -17,6 +20,7 @@ impl HitRecord {
         Self {
             p: Point::new(0.0, 0.0, 0.0),
             normal: Vector::new(0.0, 0.0, 0.0),
+            material: Box::new(Lambertian::new(Color::new(0.0, 0.0, 0.0))),
             t: 0.0,
             front_face: false,
         }
@@ -29,5 +33,9 @@ impl HitRecord {
         } else {
             -outward_normal
         };
+    }
+
+    pub fn box_clone(&mut self) -> Self {
+        mem::replace(self, Self::new())
     }
 }

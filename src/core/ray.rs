@@ -26,8 +26,17 @@ impl Ray {
         let mut rec = HitRecord::new();
 
         if world.hit(self, 0.001, INFINITY, &mut rec) {
-            let target = rec.p + Point::random_in_hemisphere(rec.normal);
-            return Ray::new(rec.p, target - rec.p).color(world, depth - 1) * 0.5;
+            let mut scattered = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 0.0));
+            let mut attenuation = Color::new(0.0, 0.0, 0.0);
+
+            if rec
+                .material
+                .scatter(self, &rec, &mut attenuation, &mut scattered)
+            {
+                return attenuation * scattered.color(world, depth - 1);
+            }
+
+            return Color::new(0.0, 0.0, 0.0);
         }
 
         let unit_direction = self.direction.unit_vector();

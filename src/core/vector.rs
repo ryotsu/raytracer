@@ -43,6 +43,10 @@ impl Vector {
         self / self.length()
     }
 
+    pub fn reflect(&self, normal: Self) -> Self {
+        self - normal * self.dot(normal) * 2.0
+    }
+
     pub fn random() -> Self {
         Self {
             x: random(),
@@ -111,6 +115,13 @@ impl ops::Sub for Vector {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         Self::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
+    }
+}
+
+impl ops::Sub<Vector> for &Vector {
+    type Output = Vector;
+    fn sub(self, rhs: Vector) -> Self::Output {
+        Vector::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
     }
 }
 
