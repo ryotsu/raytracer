@@ -1,10 +1,11 @@
 use std::fmt;
 use std::ops;
 
+#[derive(Copy, Clone, Debug)]
 pub struct Vector {
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 pub type Point = Vector;
@@ -35,7 +36,7 @@ impl Vector {
         }
     }
 
-    fn unit_vector(&self) -> Self {
+    pub fn unit_vector(&self) -> Self {
         self / self.length()
     }
 

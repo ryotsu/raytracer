@@ -1,3 +1,5 @@
+mod ray;
 mod vector;
 
-pub use vector::Color;
+pub use ray::Ray;
+pub use vector::{Color, Point, Vector};
