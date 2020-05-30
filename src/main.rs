@@ -19,7 +19,7 @@ fn main() {
     let look_at = Point::new(0.0, 0.0, 0.0);
     let vup = Vector::new(0.0, 1.0, 0.0);
     let dist_to_focus = 10.0;
-    let aperture = 0.1;
+    let aperture = 0.0;
 
     let camera = Camera::new(
         look_from,
@@ -29,6 +29,8 @@ fn main() {
         aspect_ratio,
         aperture,
         dist_to_focus,
+        0.0,
+        1.0,
     );
 
     for j in (0..image_height).rev() {

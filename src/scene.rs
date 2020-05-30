@@ -1,6 +1,6 @@
 use crate::core::{Color, Point, Vector};
 use crate::materials::{Dielectric, Lambertian, Material, Metal};
-use crate::objects::{HittableList, Sphere};
+use crate::objects::{HittableList, MovingSphere, Sphere};
 use crate::utils::{random, random_in};
 
 pub fn random_scene() -> HittableList {
@@ -24,15 +24,24 @@ pub fn random_scene() -> HittableList {
                 if choose_material < 0.8 {
                     let albedo = Color::random() * Color::random();
                     sphere_material = Box::new(Lambertian::new(albedo));
+                    let center_max = center + Vector::new(0.0, random_in(0.0, 0.5), 0.0);
+                    world.add(Box::new(MovingSphere::new(
+                        center,
+                        center_max,
+                        0.0,
+                        1.0,
+                        0.2,
+                        sphere_material,
+                    )));
                 } else if choose_material < 0.95 {
                     let albedo = Color::random_in(0.5, 1.0);
                     let fuzz = random_in(0.0, 0.5);
                     sphere_material = Box::new(Metal::new(albedo, fuzz));
+                    world.add(Box::new(Sphere::new(center, 0.2, sphere_material)));
                 } else {
                     sphere_material = Box::new(Dielectric::new(1.5));
+                    world.add(Box::new(Sphere::new(center, 0.2, sphere_material)));
                 }
-
-                world.add(Box::new(Sphere::new(center, 0.2, sphere_material)));
             }
         }
     }

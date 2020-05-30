@@ -7,11 +7,16 @@ use std::f64::INFINITY;
 pub struct Ray {
     pub origin: Point,
     pub direction: Vector,
+    pub time: f64,
 }
 
 impl Ray {
-    pub fn new(origin: Point, direction: Vector) -> Self {
-        Self { origin, direction }
+    pub fn new(origin: Point, direction: Vector, time: f64) -> Self {
+        Self {
+            origin,
+            direction,
+            time,
+        }
     }
 
     pub fn at(&self, t: f64) -> Point {
@@ -26,7 +31,8 @@ impl Ray {
         let mut rec = HitRecord::new();
 
         if world.hit(self, 0.001, INFINITY, &mut rec) {
-            let mut scattered = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 0.0));
+            let mut scattered =
+                Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 0.0), 0.0);
             let mut attenuation = Color::new(0.0, 0.0, 0.0);
 
             if rec

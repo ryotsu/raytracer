@@ -33,19 +33,19 @@ impl Material for Dielectric {
         let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
         if etai_over_etat * sin_theta > 1.0 {
             let reflected = unit_direction.reflect(rec.normal);
-            *scattered = Ray::new(rec.p, reflected);
+            *scattered = Ray::new(rec.p, reflected, ray_in.time);
             return true;
         }
 
         let reflect_prob = schlick(cos_theta, etai_over_etat);
         if random() < reflect_prob {
             let reflected = unit_direction.reflect(rec.normal);
-            *scattered = Ray::new(rec.p, reflected);
+            *scattered = Ray::new(rec.p, reflected, ray_in.time);
             return true;
         }
 
         let refracted = unit_direction.refract(rec.normal, etai_over_etat);
-        *scattered = Ray::new(rec.p, refracted);
+        *scattered = Ray::new(rec.p, refracted, ray_in.time);
         return true;
     }
 

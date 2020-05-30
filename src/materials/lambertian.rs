@@ -16,13 +16,13 @@ impl Lambertian {
 impl Material for Lambertian {
     fn scatter(
         &self,
-        _ray_in: &Ray,
+        ray_in: &Ray,
         rec: &HitRecord,
         attenuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool {
         let scatter_direction = rec.normal + Vector::random_unit_vector();
-        *scattered = Ray::new(rec.p, scatter_direction);
+        *scattered = Ray::new(rec.p, scatter_direction, ray_in.time);
         *attenuation = self.albedo;
         return true;
     }
