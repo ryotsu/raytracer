@@ -1,5 +1,5 @@
-use super::{HitRecord, Hittable};
-use crate::core::{Point, Ray};
+use super::{Aabb, HitRecord, Hittable};
+use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
 pub struct Sphere {
@@ -49,5 +49,14 @@ impl Hittable for Sphere {
         }
 
         false
+    }
+
+    fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
+        *output_box = Aabb::new(
+            self.center - Vector::new(self.radius, self.radius, self.radius),
+            self.center + Vector::new(self.radius, self.radius, self.radius),
+        );
+
+        true
     }
 }

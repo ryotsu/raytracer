@@ -119,6 +119,18 @@ impl Vector {
     }
 }
 
+impl ops::Index<usize> for Vector {
+    type Output = f64;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        match index {
+            0 => &self.x,
+            1 => &self.y,
+            _ => &self.z,
+        }
+    }
+}
+
 impl ops::Neg for Vector {
     type Output = Self;
 

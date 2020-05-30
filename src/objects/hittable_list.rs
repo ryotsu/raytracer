@@ -1,8 +1,10 @@
-use super::{HitRecord, Hittable};
-use crate::core::Ray;
+use super::{Aabb, HitRecord, Hittable};
+use crate::core::{Point, Ray};
+
+use std::sync::Arc;
 
 pub struct HittableList {
-    objects: Vec<Box<dyn Hittable>>,
+    objects: Vec<Arc<dyn Hittable>>,
 }
 
 impl HittableList {
@@ -12,7 +14,7 @@ impl HittableList {
         }
     }
 
-    pub fn add(&mut self, object: Box<dyn Hittable>) {
+    pub fn add(&mut self, object: Arc<dyn Hittable>) {
         self.objects.push(object);
     }
 }
@@ -32,5 +34,29 @@ impl Hittable for HittableList {
         }
 
         return hit_anything;
+    }
+
+    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool {
+        if self.objects.is_empty() {
+            return false;
+        }
+
+        let mut temp_box = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
+        let mut first_box = true;
+
+        for object in self.objects.iter() {
+            if !object.bounding_box(t_min, t_max, &mut temp_box) {
+                return false;
+            }
+            *output_box = if first_box {
+                temp_box.clone()
+            } else {
+                Aabb::surrounding_box(output_box, &temp_box)
+            };
+
+            first_box = false;
+        }
+
+        true
     }
 }

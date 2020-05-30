@@ -15,6 +15,11 @@ pub fn random_in(min: f64, max: f64) -> f64 {
     rng.gen_range(min, max)
 }
 
+pub fn random_int(min: usize, max: usize) -> usize {
+    let mut rng = rand::thread_rng();
+    rng.gen_range(min, max)
+}
+
 pub fn clamp(x: f64, min: f64, max: f64) -> f64 {
     if x < min {
         min
