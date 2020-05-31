@@ -5,7 +5,7 @@ use crate::utils::random_int;
 use std::cmp::Ordering;
 use std::sync::Arc;
 
-struct BVHNode {
+pub struct BVHNode {
     left: Arc<dyn Hittable>,
     right: Arc<dyn Hittable>,
     boxx: Aabb,

@@ -1,8 +1,9 @@
 use super::Aabb;
-use crate::core::{Color, Point, Ray, Vector};
+use crate::core::{Point, Ray, Vector};
 use crate::materials::{Lambertian, Material};
-
+use crate::textures::SolidColor;
 use std::mem;
+use std::sync::Arc;
 
 pub trait Hittable: Send + Sync {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
@@ -14,6 +15,8 @@ pub struct HitRecord {
     pub normal: Vector,
     pub material: Box<dyn Material>,
     pub t: f64,
+    pub u: f64,
+    pub v: f64,
     pub front_face: bool,
 }
 
@@ -22,8 +25,10 @@ impl HitRecord {
         Self {
             p: Point::new(0.0, 0.0, 0.0),
             normal: Vector::new(0.0, 0.0, 0.0),
-            material: Box::new(Lambertian::new(Color::new(0.0, 0.0, 0.0))),
+            material: Box::new(Lambertian::new(Arc::new(SolidColor::from(0.0, 0.0, 0.0)))),
             t: 0.0,
+            u: 0.0,
+            v: 0.0,
             front_face: false,
         }
     }

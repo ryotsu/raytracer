@@ -1,6 +1,7 @@
 use crate::core::{Color, Point, Vector};
 use crate::materials::{Dielectric, Lambertian, Material, Metal};
 use crate::objects::{HittableList, MovingSphere, Sphere};
+use crate::textures::{Checker, SolidColor};
 use crate::utils::{random, random_in};
 
 use std::sync::Arc;
@@ -8,7 +9,12 @@ use std::sync::Arc;
 pub fn random_scene() -> HittableList {
     let mut world = HittableList::new();
 
-    let ground_material = Box::new(Lambertian::new(Color::new(0.5, 0.5, 0.5)));
+    let checker = Arc::new(Checker::new(
+        Arc::new(SolidColor::from(0.2, 0.3, 0.1)),
+        Arc::new(SolidColor::from(0.9, 0.9, 0.9)),
+    ));
+
+    let ground_material = Box::new(Lambertian::new(checker));
     world.add(Arc::new(Sphere::new(
         Point::new(0.0, -1000.0, 0.0),
         1000.0,
@@ -24,8 +30,8 @@ pub fn random_scene() -> HittableList {
                 let sphere_material: Box<dyn Material>;
 
                 if choose_material < 0.8 {
-                    let albedo = Color::random() * Color::random();
-                    sphere_material = Box::new(Lambertian::new(albedo));
+                    let albedo = SolidColor::new(Color::random() * Color::random());
+                    sphere_material = Box::new(Lambertian::new(Arc::new(albedo)));
                     let center_max = center + Vector::new(0.0, random_in(0.0, 0.5), 0.0);
                     world.add(Arc::new(MovingSphere::new(
                         center,
@@ -55,7 +61,9 @@ pub fn random_scene() -> HittableList {
         material1,
     )));
 
-    let material2 = Box::new(Lambertian::new(Color::new(0.4, 0.2, 0.1)));
+    let material2 = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
+        0.4, 0.2, 0.1,
+    )))));
     world.add(Arc::new(Sphere::new(
         Point::new(-4.0, 1.0, 0.0),
         1.0,
@@ -67,6 +75,29 @@ pub fn random_scene() -> HittableList {
         Point::new(4.0, 1.0, 0.0),
         1.0,
         material3,
+    )));
+
+    world
+}
+
+pub fn two_spheres() -> HittableList {
+    let mut world = HittableList::new();
+
+    let checker = Arc::new(Checker::new(
+        Arc::new(SolidColor::from(0.2, 0.3, 0.1)),
+        Arc::new(SolidColor::from(0.9, 0.9, 0.9)),
+    ));
+
+    world.add(Arc::new(Sphere::new(
+        Point::new(0.0, -10.0, 0.0),
+        10.0,
+        Box::new(Lambertian::new(checker.clone())),
+    )));
+
+    world.add(Arc::new(Sphere::new(
+        Point::new(0.0, 10.0, 0.0),
+        10.0,
+        Box::new(Lambertian::new(checker)),
     )));
 
     world

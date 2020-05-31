@@ -1,8 +1,10 @@
 use rayon::prelude::*;
 
 use raytracer::core::{Camera, Color, Point, Vector};
+use raytracer::objects::BVHNode;
 use raytracer::scene;
 use raytracer::utils::random;
+use std::f64::INFINITY;
 
 fn main() {
     let aspect_ratio = 16.0 / 9.0;
@@ -13,7 +15,8 @@ fn main() {
 
     println!("P3\n {} {}\n255", image_width, image_height);
 
-    let world = scene::random_scene();
+    let mut world = scene::two_spheres();
+    let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY);
 
     let look_from = Point::new(13.0, 2.0, 3.0);
     let look_at = Point::new(0.0, 0.0, 0.0);
@@ -44,7 +47,7 @@ fn main() {
                     let u = (i as f64 + random()) / (image_width as f64 - 1.0);
                     let v = (j as f64 + random()) / (image_height as f64 - 1.0);
                     let ray = camera.ray(u, v);
-                    pixel_color += ray.color(&world, max_depth);
+                    pixel_color += ray.color(&world_bvh, max_depth);
                 }
                 pixel_color.write_color(samples_per_pixel)
             })

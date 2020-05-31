@@ -4,7 +4,7 @@ use crate::core::{Point, Ray};
 use std::sync::Arc;
 
 pub struct HittableList {
-    objects: Vec<Arc<dyn Hittable>>,
+    pub objects: Vec<Arc<dyn Hittable>>,
 }
 
 impl HittableList {
