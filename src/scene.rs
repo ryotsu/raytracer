@@ -1,7 +1,7 @@
 use crate::core::{Color, Point, Vector};
 use crate::materials::{Dielectric, Lambertian, Material, Metal};
 use crate::objects::{HittableList, MovingSphere, Sphere};
-use crate::textures::{Checker, SolidColor};
+use crate::textures::{Checker, Noise, SolidColor};
 use crate::utils::{random, random_in};
 
 use std::sync::Arc;
@@ -83,21 +83,18 @@ pub fn random_scene() -> HittableList {
 pub fn two_spheres() -> HittableList {
     let mut world = HittableList::new();
 
-    let checker = Arc::new(Checker::new(
-        Arc::new(SolidColor::from(0.2, 0.3, 0.1)),
-        Arc::new(SolidColor::from(0.9, 0.9, 0.9)),
-    ));
+    let pertext = Arc::new(Noise::new(5.0));
 
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, -10.0, 0.0),
-        10.0,
-        Box::new(Lambertian::new(checker.clone())),
+        Point::new(0.0, -1000.0, 0.0),
+        1000.0,
+        Box::new(Lambertian::new(pertext.clone())),
     )));
 
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, 10.0, 0.0),
-        10.0,
-        Box::new(Lambertian::new(checker)),
+        Point::new(0.0, 2.0, 0.0),
+        2.0,
+        Box::new(Lambertian::new(pertext)),
     )));
 
     world

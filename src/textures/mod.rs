@@ -1,9 +1,12 @@
 mod checker;
+mod noise;
+mod perlin;
 mod solid_color;
 
 use crate::core::{Color, Point};
 
 pub use checker::Checker;
+pub use noise::Noise;
 pub use solid_color::SolidColor;
 
 pub trait Texture: Send + Sync {

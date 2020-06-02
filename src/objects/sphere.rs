@@ -42,6 +42,7 @@ impl Hittable for Sphere {
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center) / self.radius;
                 rec.set_face_normal(ray, outward_normal);
+                Self::get_sphere_uv((rec.p - self.center) / self.radius, &mut rec.u, &mut rec.v);
                 rec.material = self.material.box_clone();
                 return true;
             }
@@ -51,6 +52,7 @@ impl Hittable for Sphere {
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center) / self.radius;
                 rec.set_face_normal(ray, outward_normal);
+                Self::get_sphere_uv((rec.p - self.center) / self.radius, &mut rec.u, &mut rec.v);
                 rec.material = self.material.box_clone();
                 return true;
             }
