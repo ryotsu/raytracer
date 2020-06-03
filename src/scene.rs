@@ -1,6 +1,8 @@
 use crate::core::{Color, Point, Vector};
 use crate::materials::{Dielectric, DiffuseLight, Lambertian, Material, Metal};
-use crate::objects::{FlipFace, HittableList, MovingSphere, Sphere, XYRect, XZRect, YZRect};
+use crate::objects::{
+    Boxx, FlipFace, HittableList, MovingSphere, RotateY, Sphere, Translate, XYRect, XZRect, YZRect,
+};
 use crate::textures::{Checker, Image, Noise, SolidColor};
 use crate::utils::{random, random_in};
 
@@ -184,8 +186,31 @@ pub fn cornell_box() -> HittableList {
         white.box_clone(),
     )));
     world.add(Arc::new(FlipFace::new(Arc::new(XYRect::new(
-        0.0, 555.0, 0.0, 555.0, 555.0, white,
+        0.0,
+        555.0,
+        0.0,
+        555.0,
+        555.0,
+        white.box_clone(),
     )))));
+
+    let box1 = Arc::new(Boxx::new(
+        Point::new(0.0, 0.0, 0.0),
+        Point::new(165.0, 330.0, 165.0),
+        white.box_clone(),
+    ));
+    let box1 = Arc::new(RotateY::new(box1, 15.0));
+    let box1 = Arc::new(Translate::new(box1, Vector::new(265.0, 0.0, 295.0)));
+    world.add(box1);
+
+    let box2 = Arc::new(Boxx::new(
+        Point::new(0.0, 0.0, 0.0),
+        Point::new(165.0, 165.0, 165.0),
+        white.box_clone(),
+    ));
+    let box2 = Arc::new(RotateY::new(box2, -18.0));
+    let box2 = Arc::new(Translate::new(box2, Vector::new(130.0, 0.0, 65.0)));
+    world.add(box2);
 
     world
 }

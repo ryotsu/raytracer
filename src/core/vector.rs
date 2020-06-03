@@ -131,6 +131,16 @@ impl ops::Index<usize> for Vector {
     }
 }
 
+impl ops::IndexMut<usize> for Vector {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        match index {
+            0 => &mut self.x,
+            1 => &mut self.y,
+            _ => &mut self.z,
+        }
+    }
+}
+
 impl ops::Neg for Vector {
     type Output = Self;
 
