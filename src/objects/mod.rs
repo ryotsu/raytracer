@@ -1,6 +1,7 @@
 mod aabb;
 mod boxx;
 mod bvh;
+mod constant_medium;
 mod flip_face;
 mod hit_record;
 mod hittable_list;
@@ -17,6 +18,7 @@ use crate::core::Ray;
 pub use aabb::Aabb;
 pub use boxx::Boxx;
 pub use bvh::BVHNode;
+pub use constant_medium::ConstantMedium;
 pub use flip_face::FlipFace;
 pub use hit_record::HitRecord;
 pub use hittable_list::HittableList;
