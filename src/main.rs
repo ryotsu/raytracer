@@ -12,15 +12,15 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 384 as u16;
     let image_height = (image_width as f64 / aspect_ratio) as u16;
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 1000;
     let max_depth = 50;
 
     println!("P3\n {} {}\n255", image_width, image_height);
 
-    let mut world = scene::cornell_smoke();
+    let mut world = scene::final_scene();
     let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY);
 
-    let look_from = Point::new(278.0, 278.0, -800.0);
+    let look_from = Point::new(478.0, 278.0, -600.0);
     let look_at = Point::new(278.0, 278.0, 0.0);
     let vup = Vector::new(0.0, 1.0, 0.0);
     let dist_to_focus = 10.0;
