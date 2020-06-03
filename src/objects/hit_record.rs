@@ -1,14 +1,8 @@
-use super::Aabb;
 use crate::core::{Point, Ray, Vector};
 use crate::materials::{Lambertian, Material};
 use crate::textures::SolidColor;
 use std::mem;
 use std::sync::Arc;
-
-pub trait Hittable: Send + Sync {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
-    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool;
-}
 
 pub struct HitRecord {
     pub p: Point,

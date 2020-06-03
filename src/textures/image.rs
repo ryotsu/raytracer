@@ -16,7 +16,7 @@ impl Image {
 }
 
 impl Texture for Image {
-    fn value(&self, mut u: f64, mut v: f64, p: Point) -> Color {
+    fn value(&self, mut u: f64, mut v: f64, _p: Point) -> Color {
         u = clamp(u, 0.0, 1.0);
         v = 1.0 - clamp(v, 0.0, 1.0);
 

@@ -1,6 +1,6 @@
 use crate::core::{Color, Point, Vector};
-use crate::materials::{Dielectric, Lambertian, Material, Metal};
-use crate::objects::{HittableList, MovingSphere, Sphere};
+use crate::materials::{Dielectric, DiffuseLight, Lambertian, Material, Metal};
+use crate::objects::{FlipFace, HittableList, MovingSphere, Sphere, XYRect, XZRect, YZRect};
 use crate::textures::{Checker, Image, Noise, SolidColor};
 use crate::utils::{random, random_in};
 
@@ -107,6 +107,85 @@ pub fn earth() -> HittableList {
     let globe = Arc::new(Sphere::new(Point::new(0.0, 0.0, 0.0), 2.0, earth_surace));
 
     world.add(globe);
+
+    world
+}
+
+pub fn simple_light() -> HittableList {
+    let mut world = HittableList::new();
+
+    let pertext = Arc::new(Noise::new(4.0));
+    world.add(Arc::new(Sphere::new(
+        Point::new(0.0, -1000.0, 0.0),
+        1000.0,
+        Box::new(Lambertian::new(pertext.clone())),
+    )));
+    world.add(Arc::new(Sphere::new(
+        Point::new(0.0, 2.0, 0.0),
+        2.0,
+        Box::new(Lambertian::new(pertext)),
+    )));
+
+    let diffuse_light = DiffuseLight::new(Arc::new(SolidColor::new(Color::new(4.0, 4.0, 4.0))));
+    world.add(Arc::new(Sphere::new(
+        Point::new(0.0, 7.0, 0.0),
+        2.0,
+        diffuse_light.box_clone(),
+    )));
+    world.add(Arc::new(XYRect::new(
+        3.0,
+        5.0,
+        1.0,
+        3.0,
+        -2.0,
+        Box::new(diffuse_light),
+    )));
+
+    world
+}
+
+pub fn cornell_box() -> HittableList {
+    let mut world = HittableList::new();
+
+    let red = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
+        0.65, 0.05, 0.05,
+    )))));
+    let white = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
+        0.73, 0.73, 0.73,
+    )))));
+    let green = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
+        0.12, 0.45, 0.15,
+    )))));
+    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::new(Color::new(
+        15.0, 15.0, 15.0,
+    )))));
+
+    world.add(Arc::new(FlipFace::new(Arc::new(YZRect::new(
+        0.0, 555.0, 0.0, 555.0, 555.0, green,
+    )))));
+    world.add(Arc::new(YZRect::new(0.0, 555.0, 0.0, 555.0, 0.0, red)));
+    world.add(Arc::new(XZRect::new(
+        213.0, 343.0, 227.0, 332.0, 554.0, light,
+    )));
+    world.add(Arc::new(FlipFace::new(Arc::new(XZRect::new(
+        0.0,
+        555.0,
+        0.0,
+        555.0,
+        0.0,
+        white.box_clone(),
+    )))));
+    world.add(Arc::new(XZRect::new(
+        0.0,
+        555.0,
+        0.0,
+        555.0,
+        555.0,
+        white.box_clone(),
+    )));
+    world.add(Arc::new(FlipFace::new(Arc::new(XYRect::new(
+        0.0, 555.0, 0.0, 555.0, 555.0, white,
+    )))));
 
     world
 }
