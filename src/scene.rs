@@ -1,7 +1,7 @@
 use crate::core::{Color, Point, Vector};
 use crate::materials::{Dielectric, Lambertian, Material, Metal};
 use crate::objects::{HittableList, MovingSphere, Sphere};
-use crate::textures::{Checker, Noise, SolidColor};
+use crate::textures::{Checker, Image, Noise, SolidColor};
 use crate::utils::{random, random_in};
 
 use std::sync::Arc;
@@ -96,6 +96,17 @@ pub fn two_spheres() -> HittableList {
         2.0,
         Box::new(Lambertian::new(pertext)),
     )));
+
+    world
+}
+
+pub fn earth() -> HittableList {
+    let mut world = HittableList::new();
+    let earth_texture = Arc::new(Image::new("earthmap.jpg").unwrap());
+    let earth_surace = Box::new(Lambertian::new(earth_texture));
+    let globe = Arc::new(Sphere::new(Point::new(0.0, 0.0, 0.0), 2.0, earth_surace));
+
+    world.add(globe);
 
     world
 }

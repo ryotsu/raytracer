@@ -21,7 +21,7 @@ impl Sphere {
     fn get_sphere_uv(p: Point, u: &mut f64, v: &mut f64) {
         let phi = p.z.atan2(p.x);
         let theta = p.y.asin();
-        *u = 1.0 - (phi - PI) / (2.0 * PI);
+        *u = 1.0 - (phi + PI) / (2.0 * PI);
         *v = (theta + PI / 2.0) / PI;
     }
 }
