@@ -13,13 +13,30 @@ pub use isotropic::Isotropic;
 pub use lambertian::Lambertian;
 pub use metal::Metal;
 
-pub trait Material: Send + Sync {
-    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)>;
+#[derive(Clone)]
+pub enum Material {
+    Dielectric(Dielectric),
+    DiffuseLight(DiffuseLight),
+    Isotropic(Isotropic),
+    Lambertian(Lambertian),
+    Metal(Metal),
+}
 
-    #[allow(unused_variables)]
-    fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
-        Color::from(0)
+impl Material {
+    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+        match self {
+            Material::Dielectric(m) => m.scatter(ray_in, rec),
+            Material::DiffuseLight(m) => m.scatter(ray_in, rec),
+            Material::Isotropic(m) => m.scatter(ray_in, rec),
+            Material::Lambertian(m) => m.scatter(ray_in, rec),
+            Material::Metal(m) => m.scatter(ray_in, rec),
+        }
     }
 
-    fn box_clone(&self) -> Box<dyn Material>;
+    fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
+        match self {
+            Material::DiffuseLight(m) => m.emmitted(u, v, p),
+            _ => Color::from(0),
+        }
+    }
 }

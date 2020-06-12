@@ -10,20 +10,14 @@ pub struct Lambertian {
 }
 
 impl Lambertian {
-    pub fn new(albedo: Arc<dyn Texture>) -> Self {
-        Self { albedo }
+    pub fn new(albedo: Arc<dyn Texture>) -> Material {
+        Material::Lambertian(Self { albedo })
     }
-}
 
-impl Material for Lambertian {
     fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let scatter_direction = rec.normal + Vector::random_unit_vector();
         let scattered = Ray::new(rec.p, scatter_direction, ray_in.time);
         let attenuation = self.albedo.value(rec.u, rec.v, rec.p);
         Some((attenuation, scattered))
-    }
-
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new(self.clone())
     }
 }

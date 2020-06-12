@@ -11,21 +11,15 @@ pub struct DiffuseLight {
 }
 
 impl DiffuseLight {
-    pub fn new(emit: Arc<dyn Texture>) -> Self {
-        Self { emit }
+    pub fn new(emit: Arc<dyn Texture>) -> Material {
+        Material::DiffuseLight(Self { emit })
     }
-}
 
-impl Material for DiffuseLight {
     fn scatter(&self, _ray_in: &Ray, _rec: &HitRecord) -> Option<(Color, Ray)> {
         None
     }
 
     fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
         self.emit.value(u, v, p)
-    }
-
-    fn box_clone(&self) -> Box<dyn Material> {
-        Box::new(self.clone())
     }
 }
