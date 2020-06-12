@@ -11,6 +11,21 @@ pub use checker::Checker;
 pub use noise::Noise;
 pub use solid_color::SolidColor;
 
-pub trait Texture: Send + Sync {
-    fn value(&self, u: f64, v: f64, p: Point) -> Color;
+#[derive(Clone)]
+pub enum Texture {
+    Checker(Checker),
+    Image(Image),
+    Noise(Noise),
+    SolidColor(SolidColor),
+}
+
+impl Texture {
+    pub fn value(&self, u: f64, v: f64, p: Point) -> Color {
+        match self {
+            Texture::Checker(t) => t.value(u, v, p),
+            Texture::Image(t) => t.value(u, v, p),
+            Texture::Noise(t) => t.value(u, v, p),
+            Texture::SolidColor(t) => t.value(u, v, p),
+        }
+    }
 }

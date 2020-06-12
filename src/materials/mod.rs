@@ -23,7 +23,7 @@ pub enum Material {
 }
 
 impl Material {
-    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         match self {
             Material::Dielectric(m) => m.scatter(ray_in, rec),
             Material::DiffuseLight(m) => m.scatter(ray_in, rec),
@@ -33,7 +33,7 @@ impl Material {
         }
     }
 
-    fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
+    pub fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
         match self {
             Material::DiffuseLight(m) => m.emmitted(u, v, p),
             _ => Color::from(0),

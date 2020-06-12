@@ -3,15 +3,13 @@ use crate::core::{Color, Ray, Vector};
 use crate::objects::HitRecord;
 use crate::textures::Texture;
 
-use std::sync::Arc;
-
 #[derive(Clone)]
 pub struct Isotropic {
-    albedo: Arc<dyn Texture>,
+    albedo: Texture,
 }
 
 impl Isotropic {
-    pub fn new(albedo: Arc<dyn Texture>) -> Material {
+    pub fn new(albedo: Texture) -> Material {
         Material::Isotropic(Self { albedo })
     }
 

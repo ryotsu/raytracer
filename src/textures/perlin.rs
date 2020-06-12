@@ -5,6 +5,7 @@ use rand::thread_rng;
 
 const POINT_COUNT: usize = 256;
 
+#[derive(Clone)]
 pub struct Perlin {
     ranvec: Vec<Vector>,
     perm_x: Vec<u64>,

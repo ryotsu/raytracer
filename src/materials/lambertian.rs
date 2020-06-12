@@ -2,15 +2,14 @@ use super::Material;
 use crate::core::{Color, Ray, Vector};
 use crate::objects::HitRecord;
 use crate::textures::Texture;
-use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct Lambertian {
-    albedo: Arc<dyn Texture>,
+    albedo: Texture,
 }
 
 impl Lambertian {
-    pub fn new(albedo: Arc<dyn Texture>) -> Material {
+    pub fn new(albedo: Texture) -> Material {
         Material::Lambertian(Self { albedo })
     }
 
