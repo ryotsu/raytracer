@@ -15,7 +15,7 @@ impl Checker {
 
 impl Texture for Checker {
     fn value(&self, u: f64, v: f64, p: Point) -> Color {
-        let sines = (10.0 * p.x).sin() * (10.0 * p.y).sin() * (10.0 * p.z).sin();
+        let sines = (10.0 * p.x()).sin() * (10.0 * p.y()).sin() * (10.0 * p.z()).sin();
         if sines < 0.0 {
             self.odd.value(u, v, p)
         } else {

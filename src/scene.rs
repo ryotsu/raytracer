@@ -13,13 +13,13 @@ pub fn random_scene() -> HittableList {
     let mut world = HittableList::new();
 
     let checker = Arc::new(Checker::new(
-        Arc::new(SolidColor::from(0.2, 0.3, 0.1)),
-        Arc::new(SolidColor::from(0.9, 0.9, 0.9)),
+        Arc::new(SolidColor::new(0.2, 0.3, 0.1)),
+        Arc::new(SolidColor::from(0.9)),
     ));
 
     let ground_material = Box::new(Lambertian::new(checker));
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, -1000.0, 0.0),
+        Point::new(0, -1000, 0),
         1000.0,
         ground_material,
     )));
@@ -29,13 +29,13 @@ pub fn random_scene() -> HittableList {
             let choose_material = random();
             let center = Point::new(a as f64 + 0.9 * random(), 0.2, b as f64 + 0.9 * random());
 
-            if (center - Vector::new(4.0, 0.2, 0.0)).length() > 0.9 {
+            if (center - Vector::new(4, 0.2, 0)).length() > 0.9 {
                 let sphere_material: Box<dyn Material>;
 
                 if choose_material < 0.8 {
-                    let albedo = SolidColor::new(Color::random() * Color::random());
+                    let albedo = SolidColor::from_color(Color::random() * Color::random());
                     sphere_material = Box::new(Lambertian::new(Arc::new(albedo)));
-                    let center_max = center + Vector::new(0.0, random_in(0.0, 0.5), 0.0);
+                    let center_max = center + Vector::new(0, random_in(0.0, 0.5), 0);
                     world.add(Arc::new(MovingSphere::new(
                         center,
                         center_max,
@@ -58,27 +58,13 @@ pub fn random_scene() -> HittableList {
     }
 
     let material1 = Box::new(Dielectric::new(1.5));
-    world.add(Arc::new(Sphere::new(
-        Point::new(0.0, 1.0, 0.0),
-        1.0,
-        material1,
-    )));
+    world.add(Arc::new(Sphere::new(Point::new(0, 1, 0), 1.0, material1)));
 
-    let material2 = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.4, 0.2, 0.1,
-    )))));
-    world.add(Arc::new(Sphere::new(
-        Point::new(-4.0, 1.0, 0.0),
-        1.0,
-        material2,
-    )));
+    let material2 = Box::new(Lambertian::new(Arc::new(SolidColor::new(0.4, 0.2, 0.1))));
+    world.add(Arc::new(Sphere::new(Point::new(-4, 1, 0), 1.0, material2)));
 
     let material3 = Box::new(Metal::new(Color::new(0.7, 0.6, 0.5), 0.0));
-    world.add(Arc::new(Sphere::new(
-        Point::new(4.0, 1.0, 0.0),
-        1.0,
-        material3,
-    )));
+    world.add(Arc::new(Sphere::new(Point::new(4, 1, 0), 1.0, material3)));
 
     world
 }
@@ -89,13 +75,13 @@ pub fn two_spheres() -> HittableList {
     let pertext = Arc::new(Noise::new(5.0));
 
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, -1000.0, 0.0),
+        Point::new(0, -1000, 0),
         1000.0,
         Box::new(Lambertian::new(pertext.clone())),
     )));
 
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, 2.0, 0.0),
+        Point::new(0, 2, 0),
         2.0,
         Box::new(Lambertian::new(pertext)),
     )));
@@ -107,7 +93,7 @@ pub fn earth() -> HittableList {
     let mut world = HittableList::new();
     let earth_texture = Arc::new(Image::new("earthmap.jpg").unwrap());
     let earth_surace = Box::new(Lambertian::new(earth_texture));
-    let globe = Arc::new(Sphere::new(Point::new(0.0, 0.0, 0.0), 2.0, earth_surace));
+    let globe = Arc::new(Sphere::new(Point::from(0), 2.0, earth_surace));
 
     world.add(globe);
 
@@ -119,19 +105,19 @@ pub fn simple_light() -> HittableList {
 
     let pertext = Arc::new(Noise::new(4.0));
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, -1000.0, 0.0),
+        Point::new(0, -1000, 0),
         1000.0,
         Box::new(Lambertian::new(pertext.clone())),
     )));
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, 2.0, 0.0),
+        Point::new(0, 2, 0),
         2.0,
         Box::new(Lambertian::new(pertext)),
     )));
 
-    let diffuse_light = DiffuseLight::new(Arc::new(SolidColor::new(Color::new(4.0, 4.0, 4.0))));
+    let diffuse_light = DiffuseLight::new(Arc::new(SolidColor::from(4)));
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, 7.0, 0.0),
+        Point::new(0, 7, 0),
         2.0,
         diffuse_light.box_clone(),
     )));
@@ -150,18 +136,10 @@ pub fn simple_light() -> HittableList {
 pub fn cornell_box() -> HittableList {
     let mut world = HittableList::new();
 
-    let red = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.65, 0.05, 0.05,
-    )))));
-    let white = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.73, 0.73, 0.73,
-    )))));
-    let green = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.12, 0.45, 0.15,
-    )))));
-    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::new(Color::new(
-        15.0, 15.0, 15.0,
-    )))));
+    let red = Box::new(Lambertian::new(Arc::new(SolidColor::new(0.65, 0.05, 0.05))));
+    let white = Box::new(Lambertian::new(Arc::new(SolidColor::from(0.73))));
+    let green = Box::new(Lambertian::new(Arc::new(SolidColor::new(0.12, 0.45, 0.15))));
+    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::from(15))));
 
     world.add(Arc::new(FlipFace::new(Arc::new(YZRect::new(
         0.0, 555.0, 0.0, 555.0, 555.0, green,
@@ -196,21 +174,21 @@ pub fn cornell_box() -> HittableList {
     )))));
 
     let box1 = Arc::new(Boxx::new(
-        Point::new(0.0, 0.0, 0.0),
-        Point::new(165.0, 330.0, 165.0),
+        Point::from(0),
+        Point::new(165, 330, 165),
         white.box_clone(),
     ));
     let box1 = Arc::new(RotateY::new(box1, 15.0));
-    let box1 = Arc::new(Translate::new(box1, Vector::new(265.0, 0.0, 295.0)));
+    let box1 = Arc::new(Translate::new(box1, Vector::new(265, 0, 295)));
     world.add(box1);
 
     let box2 = Arc::new(Boxx::new(
-        Point::new(0.0, 0.0, 0.0),
-        Point::new(165.0, 165.0, 165.0),
+        Point::from(0),
+        Point::from(165),
         white.box_clone(),
     ));
     let box2 = Arc::new(RotateY::new(box2, -18.0));
-    let box2 = Arc::new(Translate::new(box2, Vector::new(130.0, 0.0, 65.0)));
+    let box2 = Arc::new(Translate::new(box2, Vector::new(130, 0, 65)));
     world.add(box2);
 
     world
@@ -219,18 +197,10 @@ pub fn cornell_box() -> HittableList {
 pub fn cornell_smoke() -> HittableList {
     let mut world = HittableList::new();
 
-    let red = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.65, 0.05, 0.05,
-    )))));
-    let white = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.73, 0.73, 0.73,
-    )))));
-    let green = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.12, 0.45, 0.15,
-    )))));
-    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::new(Color::new(
-        7.0, 7.0, 7.0,
-    )))));
+    let red = Box::new(Lambertian::new(Arc::new(SolidColor::new(0.65, 0.05, 0.05))));
+    let white = Box::new(Lambertian::new(Arc::new(SolidColor::from(0.73))));
+    let green = Box::new(Lambertian::new(Arc::new(SolidColor::new(0.12, 0.45, 0.15))));
+    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::from(7))));
 
     world.add(Arc::new(FlipFace::new(Arc::new(YZRect::new(
         0.0, 555.0, 0.0, 555.0, 555.0, green,
@@ -265,31 +235,31 @@ pub fn cornell_smoke() -> HittableList {
     )))));
 
     let box1 = Arc::new(Boxx::new(
-        Point::new(0.0, 0.0, 0.0),
-        Point::new(165.0, 330.0, 165.0),
+        Point::from(0),
+        Point::new(165, 330, 165),
         white.box_clone(),
     ));
     let box1 = Arc::new(RotateY::new(box1, 15.0));
-    let box1 = Arc::new(Translate::new(box1, Vector::new(265.0, 0.0, 295.0)));
+    let box1 = Arc::new(Translate::new(box1, Vector::new(265, 0, 295)));
 
     let box2 = Arc::new(Boxx::new(
-        Point::new(0.0, 0.0, 0.0),
-        Point::new(165.0, 165.0, 165.0),
+        Point::from(0),
+        Point::from(165),
         white.box_clone(),
     ));
     let box2 = Arc::new(RotateY::new(box2, -18.0));
-    let box2 = Arc::new(Translate::new(box2, Vector::new(130.0, 0.0, 65.0)));
+    let box2 = Arc::new(Translate::new(box2, Vector::new(130, 0, 65)));
 
     world.add(Arc::new(ConstantMedium::new(
         box1,
         0.01,
-        Arc::new(SolidColor::new(Color::new(0.0, 0.0, 0.0))),
+        Arc::new(SolidColor::from(0)),
     )));
 
     world.add(Arc::new(ConstantMedium::new(
         box2,
         0.01,
-        Arc::new(SolidColor::new(Color::new(1.0, 1.0, 1.0))),
+        Arc::new(SolidColor::from(1)),
     )));
 
     world
@@ -298,9 +268,7 @@ pub fn cornell_smoke() -> HittableList {
 pub fn final_scene() -> HittableList {
     let mut boxes = HittableList::new();
 
-    let ground = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.48, 0.93, 0.53,
-    )))));
+    let ground = Box::new(Lambertian::new(Arc::new(SolidColor::new(0.48, 0.93, 0.53))));
 
     let boxes_per_side = 20;
 
@@ -326,18 +294,15 @@ pub fn final_scene() -> HittableList {
 
     world.add(Arc::new(BVHNode::new(&mut boxes.objects[..], 0.0, 1.0)));
 
-    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::new(Color::new(
-        7.0, 7.0, 7.0,
-    )))));
+    let light = Box::new(DiffuseLight::new(Arc::new(SolidColor::from(7.0))));
     world.add(Arc::new(XZRect::new(
         123.0, 423.0, 147.0, 412.0, 554.0, light,
     )));
 
     let center1 = Point::new(400.0, 400.0, 200.0);
     let center2 = center1 + Vector::new(30.0, 0.0, 0.0);
-    let moving_sphere_material = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.7, 0.3, 0.1,
-    )))));
+    let moving_sphere_material =
+        Box::new(Lambertian::new(Arc::new(SolidColor::new(0.7, 0.3, 0.1))));
     world.add(Arc::new(MovingSphere::new(
         center1,
         center2,
@@ -348,19 +313,19 @@ pub fn final_scene() -> HittableList {
     )));
 
     world.add(Arc::new(Sphere::new(
-        Point::new(260.0, 150.0, 45.0),
+        Point::new(260, 150, 45),
         50.0,
         Box::new(Dielectric::new(1.5)),
     )));
 
     world.add(Arc::new(Sphere::new(
-        Point::new(0.0, 150.0, 145.0),
+        Point::new(0, 150, 145),
         50.0,
         Box::new(Metal::new(Color::new(0.8, 0.8, 0.9), 10.0)),
     )));
 
     let boundary = Arc::new(Sphere::new(
-        Point::new(360.0, 150.0, 145.0),
+        Point::new(360, 150, 145),
         70.0,
         Box::new(Dielectric::new(1.5)),
     ));
@@ -368,40 +333,38 @@ pub fn final_scene() -> HittableList {
     world.add(Arc::new(ConstantMedium::new(
         boundary,
         0.2,
-        Arc::new(SolidColor::new(Color::new(0.2, 0.4, 0.9))),
+        Arc::new(SolidColor::new(0.2, 0.4, 0.9)),
     )));
 
     let boundary = Arc::new(Sphere::new(
-        Point::new(0.0, 0.0, 0.0),
+        Point::from(0),
         5000.0,
         Box::new(Dielectric::new(1.5)),
     ));
     world.add(Arc::new(ConstantMedium::new(
         boundary,
         0.0001,
-        Arc::new(SolidColor::new(Color::new(1.0, 1.0, 1.0))),
+        Arc::new(SolidColor::from(1)),
     )));
 
     let emat = Box::new(Lambertian::new(Arc::new(
         Image::new("earthmap.jpg").unwrap(),
     )));
     world.add(Arc::new(Sphere::new(
-        Point::new(400.0, 200.0, 400.0),
+        Point::new(400, 200, 400),
         100.0,
         emat,
     )));
 
     let pertext = Box::new(Lambertian::new(Arc::new(Noise::new(0.1))));
     world.add(Arc::new(Sphere::new(
-        Point::new(220.0, 280.0, 300.0),
+        Point::new(220, 280, 300),
         80.0,
         pertext,
     )));
 
     let mut boxes2 = HittableList::new();
-    let white = Box::new(Lambertian::new(Arc::new(SolidColor::new(Color::new(
-        0.73, 0.73, 0.73,
-    )))));
+    let white = Box::new(Lambertian::new(Arc::new(SolidColor::from(0.73))));
     let ns = 1000;
     for _ in 0..ns {
         boxes2.add(Arc::new(Sphere::new(
@@ -416,7 +379,7 @@ pub fn final_scene() -> HittableList {
             Arc::new(BVHNode::new(&mut boxes2.objects[..], 0.0, 1.0)),
             15.0,
         )),
-        Vector::new(-100.0, 270.0, 395.0),
+        Vector::new(-100, 270, 395),
     )));
 
     world

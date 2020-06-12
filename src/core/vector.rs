@@ -6,17 +6,37 @@ use std::ops;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
+    x: f64,
+    y: f64,
+    z: f64,
 }
 
 pub type Point = Vector;
 pub type Color = Vector;
 
 impl Vector {
-    pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Self { x, y, z }
+    pub fn new<T: Into<f64>, U: Into<f64>, V: Into<f64>>(x: T, y: U, z: V) -> Self {
+        Self {
+            x: x.into(),
+            y: y.into(),
+            z: z.into(),
+        }
+    }
+
+    pub fn from<T: Into<f64> + Copy>(a: T) -> Self {
+        Self::new(a, a, a)
+    }
+
+    pub fn x(&self) -> f64 {
+        self.x
+    }
+
+    pub fn y(&self) -> f64 {
+        self.y
+    }
+
+    pub fn z(&self) -> f64 {
+        self.z
     }
 
     pub fn length(&self) -> f64 {

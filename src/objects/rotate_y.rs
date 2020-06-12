@@ -18,11 +18,11 @@ impl RotateY {
         let radians = degrees_to_radians(angle);
         let sin_theta = radians.sin();
         let cos_theta = radians.cos();
-        let mut bbox = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
+        let mut bbox = Aabb::new(Point::from(0), Point::from(0));
         let hasbox = object.bounding_box(0.0, 1.0, &mut bbox);
 
-        let mut min = Point::new(INFINITY, INFINITY, INFINITY);
-        let mut max = Point::new(-INFINITY, -INFINITY, -INFINITY);
+        let mut min = Point::from(INFINITY);
+        let mut max = Point::from(-INFINITY);
 
         for i in 0..2 {
             for j in 0..2 {
@@ -31,9 +31,9 @@ impl RotateY {
                     let j = j as f64;
                     let k = k as f64;
 
-                    let x = i * bbox.max.x + (1.0 - i) * bbox.min.x;
-                    let y = j * bbox.max.y + (1.0 - j) * bbox.min.y;
-                    let z = k * bbox.max.z + (1.0 - k) * bbox.min.z;
+                    let x = i * bbox.max.x() + (1.0 - i) * bbox.min.x();
+                    let y = j * bbox.max.y() + (1.0 - j) * bbox.min.y();
+                    let z = k * bbox.max.z() + (1.0 - k) * bbox.min.z();
 
                     let newx = cos_theta * x + sin_theta * z;
                     let newz = -sin_theta * x + cos_theta * z;

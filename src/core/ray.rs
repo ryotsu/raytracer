@@ -25,7 +25,7 @@ impl Ray {
 
     pub fn color<T: Hittable>(&self, background: Color, world: &T, depth: i8) -> Color {
         if depth <= 0 {
-            return Color::new(0.0, 0.0, 0.0);
+            return Color::from(0);
         }
 
         let mut rec = HitRecord::new();
@@ -34,8 +34,8 @@ impl Ray {
             return background;
         }
 
-        let mut scattered = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 0.0, 0.0), 0.0);
-        let mut attenuation = Color::new(0.0, 0.0, 0.0);
+        let mut scattered = Ray::new(Point::from(0), Vector::from(0), 0.0);
+        let mut attenuation = Color::from(0);
         let emitted = rec.material.emitted(rec.u, rec.v, rec.p);
 
         if !rec

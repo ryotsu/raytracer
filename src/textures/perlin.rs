@@ -33,15 +33,15 @@ impl Perlin {
     }
 
     pub fn noise(&self, p: Point) -> f64 {
-        let u = p.x - p.x.floor();
-        let v = p.y - p.y.floor();
-        let w = p.z - p.z.floor();
+        let u = p.x() - p.x().floor();
+        let v = p.y() - p.y().floor();
+        let w = p.z() - p.z().floor();
 
-        let i = p.x.floor() as i64;
-        let j = p.y.floor() as i64;
-        let k = p.z.floor() as i64;
+        let i = p.x().floor() as i64;
+        let j = p.y().floor() as i64;
+        let k = p.z().floor() as i64;
 
-        let mut c: [[[Vector; 2]; 2]; 2] = [[[Vector::new(0.0, 0.0, 0.0); 2]; 2]; 2];
+        let mut c: [[[Vector; 2]; 2]; 2] = [[[Vector::from(0); 2]; 2]; 2];
 
         for di in 0..2 {
             for dj in 0..2 {

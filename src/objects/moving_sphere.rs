@@ -74,13 +74,13 @@ impl Hittable for MovingSphere {
     }
     fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool {
         let box0 = Aabb::new(
-            self.center(t_min) - Vector::new(self.radius, self.radius, self.radius),
-            self.center(t_min) + Vector::new(self.radius, self.radius, self.radius),
+            self.center(t_min) - Vector::from(self.radius),
+            self.center(t_min) + Vector::from(self.radius),
         );
 
         let box1 = Aabb::new(
-            self.center(t_max) - Vector::new(self.radius, self.radius, self.radius),
-            self.center(t_max) + Vector::new(self.radius, self.radius, self.radius),
+            self.center(t_max) - Vector::from(self.radius),
+            self.center(t_max) + Vector::from(self.radius),
         );
 
         *output_box = Aabb::surrounding_box(&box0, &box1);

@@ -41,7 +41,7 @@ impl Hittable for HittableList {
             return false;
         }
 
-        let mut temp_box = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
+        let mut temp_box = Aabb::new(Point::from(0), Point::from(0));
         let mut first_box = true;
 
         for object in self.objects.iter() {

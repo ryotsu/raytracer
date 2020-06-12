@@ -6,14 +6,18 @@ pub struct SolidColor {
 }
 
 impl SolidColor {
-    pub fn new(color: Color) -> Self {
-        Self { color }
-    }
-
-    pub fn from(red: f64, green: f64, blue: f64) -> Self {
+    pub fn new<T: Into<f64>, U: Into<f64>, V: Into<f64>>(red: T, green: U, blue: V) -> Self {
         Self {
             color: Color::new(red, green, blue),
         }
+    }
+
+    pub fn from<T: Into<f64> + Copy>(a: T) -> Self {
+        Self::new(a, a, a)
+    }
+
+    pub fn from_color(color: Color) -> Self {
+        Self { color }
     }
 }
 

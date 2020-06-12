@@ -24,7 +24,7 @@ pub trait Material: Send + Sync {
 
     #[allow(unused_variables)]
     fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
-        Color::new(0.0, 0.0, 0.0)
+        Color::from(0)
     }
 
     fn box_clone(&self) -> Box<dyn Material>;

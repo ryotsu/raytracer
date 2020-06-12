@@ -26,13 +26,13 @@ impl YZRect {
 
 impl Hittable for YZRect {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
-        let t = (self.k - ray.origin.x) / ray.direction.x;
+        let t = (self.k - ray.origin.x()) / ray.direction.x();
         if t < t_min || t > t_max {
             return false;
         }
 
-        let y = ray.origin.y + t * ray.direction.y;
-        let z = ray.origin.z + t * ray.direction.z;
+        let y = ray.origin.y() + t * ray.direction.y();
+        let z = ray.origin.z() + t * ray.direction.z();
         if y < self.y0 || y > self.y1 || z < self.z0 || z > self.z1 {
             return false;
         }
@@ -40,7 +40,7 @@ impl Hittable for YZRect {
         rec.u = (y - self.y0) / (self.y1 - self.y0);
         rec.v = (z - self.z0) / (self.z1 - self.z0);
         rec.t = t;
-        let outward_normal = Vector::new(1.0, 0.0, 0.0);
+        let outward_normal = Vector::new(1, 0, 0);
         rec.set_face_normal(ray, outward_normal);
         rec.material = self.material.box_clone();
         rec.p = ray.at(t);

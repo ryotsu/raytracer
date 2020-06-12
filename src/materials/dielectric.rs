@@ -21,7 +21,7 @@ impl Material for Dielectric {
         attenuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool {
-        *attenuation = Color::new(1.0, 1.0, 1.0);
+        *attenuation = Color::from(1);
         let etai_over_etat = if rec.front_face {
             1.0 / self.ref_index
         } else {

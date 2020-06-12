@@ -17,9 +17,9 @@ pub struct HitRecord {
 impl HitRecord {
     pub fn new() -> Self {
         Self {
-            p: Point::new(0.0, 0.0, 0.0),
-            normal: Vector::new(0.0, 0.0, 0.0),
-            material: Box::new(Lambertian::new(Arc::new(SolidColor::from(0.0, 0.0, 0.0)))),
+            p: Point::from(0),
+            normal: Vector::from(0),
+            material: Box::new(Lambertian::new(Arc::new(SolidColor::from(0)))),
             t: 0.0,
             u: 0.0,
             v: 0.0,

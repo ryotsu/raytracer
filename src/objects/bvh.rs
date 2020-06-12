@@ -43,8 +43,8 @@ impl BVHNode {
             right = Arc::new(Self::new(&mut objects[mid..], t_min, t_max));
         }
 
-        let mut box_left = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
-        let mut box_right = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
+        let mut box_left = Aabb::new(Point::from(0), Point::from(0));
+        let mut box_right = Aabb::new(Point::from(0), Point::from(0));
 
         if !left.bounding_box(t_min, t_max, &mut box_left)
             || !right.bounding_box(t_min, t_max, &mut box_right)
@@ -79,8 +79,8 @@ impl Hittable for BVHNode {
 }
 
 fn box_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>, axis: usize) -> Ordering {
-    let mut box_a = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
-    let mut box_b = Aabb::new(Point::new(0.0, 0.0, 0.0), Point::new(0.0, 0.0, 0.0));
+    let mut box_a = Aabb::new(Point::from(0), Point::from(0));
+    let mut box_b = Aabb::new(Point::from(0), Point::from(0));
 
     if !a.bounding_box(0.0, 0.0, &mut box_a) || !b.bounding_box(0.0, 0.0, &mut box_b) {
         eprintln!("No bounding box in BVHNode constructor.");

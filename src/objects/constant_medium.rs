@@ -75,7 +75,7 @@ impl Hittable for ConstantMedium {
             eprintln!("rec.p = {}", rec.p);
         }
 
-        rec.normal = Vector::new(1.0, 0.0, 0.0);
+        rec.normal = Vector::new(1, 0, 0);
         rec.front_face = true;
         rec.material = self.phase_function.box_clone();
 

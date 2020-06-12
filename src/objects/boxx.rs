@@ -15,53 +15,53 @@ impl Boxx {
         let mut sides = HittableList::new();
 
         sides.add(Arc::new(XYRect::new(
-            min.x,
-            max.x,
-            min.y,
-            max.y,
-            max.z,
+            min.x(),
+            max.x(),
+            min.y(),
+            max.y(),
+            max.z(),
             material.box_clone(),
         )));
         sides.add(Arc::new(FlipFace::new(Arc::new(XYRect::new(
-            min.x,
-            max.x,
-            min.y,
-            max.y,
-            min.z,
+            min.x(),
+            max.x(),
+            min.y(),
+            max.y(),
+            min.z(),
             material.box_clone(),
         )))));
 
         sides.add(Arc::new(XZRect::new(
-            min.x,
-            max.x,
-            min.z,
-            max.z,
-            max.y,
+            min.x(),
+            max.x(),
+            min.z(),
+            max.z(),
+            max.y(),
             material.box_clone(),
         )));
         sides.add(Arc::new(FlipFace::new(Arc::new(XZRect::new(
-            min.x,
-            max.x,
-            min.z,
-            max.z,
-            min.y,
+            min.x(),
+            max.x(),
+            min.z(),
+            max.z(),
+            min.y(),
             material.box_clone(),
         )))));
 
         sides.add(Arc::new(YZRect::new(
-            min.y,
-            max.y,
-            min.z,
-            max.z,
-            max.x,
+            min.y(),
+            max.y(),
+            min.z(),
+            max.z(),
+            max.x(),
             material.box_clone(),
         )));
         sides.add(Arc::new(FlipFace::new(Arc::new(YZRect::new(
-            min.y,
-            max.y,
-            min.z,
-            max.z,
-            min.x,
+            min.y(),
+            max.y(),
+            min.z(),
+            max.z(),
+            min.x(),
             material.box_clone(),
         )))));
 

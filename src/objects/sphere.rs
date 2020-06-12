@@ -19,8 +19,8 @@ impl Sphere {
     }
 
     fn get_sphere_uv(p: Point, u: &mut f64, v: &mut f64) {
-        let phi = p.z.atan2(p.x);
-        let theta = p.y.asin();
+        let phi = p.z().atan2(p.x());
+        let theta = p.y().asin();
         *u = 1.0 - (phi + PI) / (2.0 * PI);
         *v = (theta + PI / 2.0) / PI;
     }
@@ -63,8 +63,8 @@ impl Hittable for Sphere {
 
     fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
         *output_box = Aabb::new(
-            self.center - Vector::new(self.radius, self.radius, self.radius),
-            self.center + Vector::new(self.radius, self.radius, self.radius),
+            self.center - Vector::from(self.radius),
+            self.center + Vector::from(self.radius),
         );
 
         true

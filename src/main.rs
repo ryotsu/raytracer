@@ -7,7 +7,7 @@ use raytracer::utils::random;
 use std::f64::INFINITY;
 
 fn main() {
-    let background = Color::new(0.0, 0.0, 0.0);
+    let background = Color::from(0);
 
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 384 as u16;
@@ -20,9 +20,9 @@ fn main() {
     let mut world = scene::final_scene();
     let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY);
 
-    let look_from = Point::new(478.0, 278.0, -600.0);
-    let look_at = Point::new(278.0, 278.0, 0.0);
-    let vup = Vector::new(0.0, 1.0, 0.0);
+    let look_from = Point::new(478, 278, -600);
+    let look_at = Point::new(278, 278, 0);
+    let vup = Vector::new(0, 1, 0);
     let dist_to_focus = 10.0;
     let aperture = 0.0;
 
@@ -44,7 +44,7 @@ fn main() {
         let line = (0..image_width)
             .into_par_iter()
             .map(|i| {
-                let mut pixel_color = Color::new(0.0, 0.0, 0.0);
+                let mut pixel_color = Color::from(0);
                 for _ in 0..samples_per_pixel {
                     let u = (i as f64 + random()) / (image_width as f64 - 1.0);
                     let v = (j as f64 + random()) / (image_height as f64 - 1.0);

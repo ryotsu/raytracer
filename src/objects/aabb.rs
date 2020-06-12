@@ -13,15 +13,15 @@ impl Aabb {
 
     pub fn surrounding_box(a: &Aabb, b: &Aabb) -> Aabb {
         let small = Point::new(
-            a.min.x.min(b.min.x),
-            a.min.y.min(b.min.y),
-            a.min.z.min(b.min.z),
+            a.min.x().min(b.min.x()),
+            a.min.y().min(b.min.y()),
+            a.min.z().min(b.min.z()),
         );
 
         let big = Point::new(
-            a.max.x.max(b.max.x),
-            a.max.y.max(b.max.y),
-            a.max.z.max(b.max.z),
+            a.max.x().max(b.max.x()),
+            a.max.y().max(b.max.y()),
+            a.max.z().max(b.max.z()),
         );
 
         Aabb::new(small, big)
