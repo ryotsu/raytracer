@@ -10,9 +10,9 @@ fn main() {
     let background = Color::from(0);
 
     let aspect_ratio = 16.0 / 9.0;
-    let image_width = 384 as u16;
+    let image_width = 1920 as u16;
     let image_height = (image_width as f64 / aspect_ratio) as u16;
-    let samples_per_pixel = 1000;
+    let samples_per_pixel = 100;
     let max_depth = 50;
 
     println!("P3\n {} {}\n255", image_width, image_height);
@@ -39,7 +39,7 @@ fn main() {
     );
 
     for j in (0..image_height).rev() {
-        eprint!("\rScanlines remaining: {:>3}", j);
+        eprint!("\rScanlines remaining: {:>4}", j);
 
         let line = (0..image_width)
             .into_par_iter()

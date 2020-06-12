@@ -338,7 +338,7 @@ pub fn final_scene() -> HittableList {
         emat,
     )));
 
-    let pertext = Lambertian::new(Noise::new(0.1));
+    let pertext = Lambertian::new(Noise::new(0.05));
     world.add(Arc::new(Sphere::new(
         Point::new(220, 280, 300),
         80.0,

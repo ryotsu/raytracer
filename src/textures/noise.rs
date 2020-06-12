@@ -19,6 +19,7 @@ impl Noise {
     }
 
     pub fn value(&self, _u: f64, _v: f64, p: Point) -> Color {
-        Color::from(1) * 0.5 * (1.0 + (self.scale * p.z() + 10.0 * self.noise.turb(p, 7)).sin())
+        //Color::from(1) * 0.5 * (1.0 + (self.scale * p.z() + 10.0 * self.noise.turb(p, 7)).sin())
+        Color::from(1) * self.noise.turb(p * self.scale, 7)
     }
 }
