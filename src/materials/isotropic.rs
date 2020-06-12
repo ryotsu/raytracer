@@ -16,16 +16,10 @@ impl Isotropic {
 }
 
 impl Material for Isotropic {
-    fn scatter(
-        &self,
-        ray_in: &Ray,
-        rec: &HitRecord,
-        attenuation: &mut Color,
-        scattered: &mut Ray,
-    ) -> bool {
-        *scattered = Ray::new(rec.p, Vector::random_in_unit_sphere(), ray_in.time);
-        *attenuation = self.albedo.value(rec.u, rec.v, rec.p);
-        true
+    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+        let scattered = Ray::new(rec.p, Vector::random_in_unit_sphere(), ray_in.time);
+        let attenuation = self.albedo.value(rec.u, rec.v, rec.p);
+        Some((attenuation, scattered))
     }
 
     fn box_clone(&self) -> Box<dyn Material> {

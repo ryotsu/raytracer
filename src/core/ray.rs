@@ -34,17 +34,13 @@ impl Ray {
             return background;
         }
 
-        let mut scattered = Ray::new(Point::from(0), Vector::from(0), 0.0);
-        let mut attenuation = Color::from(0);
         let emitted = rec.material.emitted(rec.u, rec.v, rec.p);
 
-        if !rec
-            .material
-            .scatter(self, &rec, &mut attenuation, &mut scattered)
-        {
-            return emitted;
+        match rec.material.scatter(self, &rec) {
+            Some((attenuation, scattered)) => {
+                emitted + attenuation * scattered.color(background, world, depth - 1)
+            }
+            None => emitted,
         }
-
-        return emitted + attenuation * scattered.color(background, world, depth - 1);
     }
 }

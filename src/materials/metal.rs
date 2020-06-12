@@ -17,21 +17,20 @@ impl Metal {
 }
 
 impl Material for Metal {
-    fn scatter(
-        &self,
-        ray_in: &Ray,
-        rec: &HitRecord,
-        attenuation: &mut Color,
-        scattered: &mut Ray,
-    ) -> bool {
+    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let reflected = ray_in.direction.unit_vector().reflect(rec.normal);
-        *scattered = Ray::new(
+        let scattered = Ray::new(
             rec.p,
             reflected + Vector::random_in_unit_sphere() * self.fuzz,
             ray_in.time,
         );
-        *attenuation = self.albedo;
-        scattered.direction.dot(rec.normal) > 0.0
+        let attenuation = self.albedo;
+
+        if scattered.direction.dot(rec.normal) > 0.0 {
+            Some((attenuation, scattered))
+        } else {
+            None
+        }
     }
     fn box_clone(&self) -> Box<dyn Material> {
         Box::new(Self::new(self.albedo, self.fuzz))

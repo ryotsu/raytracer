@@ -14,14 +14,9 @@ impl Dielectric {
 }
 
 impl Material for Dielectric {
-    fn scatter(
-        &self,
-        ray_in: &Ray,
-        rec: &HitRecord,
-        attenuation: &mut Color,
-        scattered: &mut Ray,
-    ) -> bool {
-        *attenuation = Color::from(1);
+    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+        let attenuation = Color::from(1);
+
         let etai_over_etat = if rec.front_face {
             1.0 / self.ref_index
         } else {
@@ -33,20 +28,20 @@ impl Material for Dielectric {
         let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
         if etai_over_etat * sin_theta > 1.0 {
             let reflected = unit_direction.reflect(rec.normal);
-            *scattered = Ray::new(rec.p, reflected, ray_in.time);
-            return true;
+            let scattered = Ray::new(rec.p, reflected, ray_in.time);
+            return Some((attenuation, scattered));
         }
 
         let reflect_prob = schlick(cos_theta, etai_over_etat);
         if random() < reflect_prob {
             let reflected = unit_direction.reflect(rec.normal);
-            *scattered = Ray::new(rec.p, reflected, ray_in.time);
-            return true;
+            let scattered = Ray::new(rec.p, reflected, ray_in.time);
+            return Some((attenuation, scattered));
         }
 
         let refracted = unit_direction.refract(rec.normal, etai_over_etat);
-        *scattered = Ray::new(rec.p, refracted, ray_in.time);
-        return true;
+        let scattered = Ray::new(rec.p, refracted, ray_in.time);
+        Some((attenuation, scattered))
     }
 
     fn box_clone(&self) -> Box<dyn Material> {
