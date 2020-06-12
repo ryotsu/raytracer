@@ -13,7 +13,7 @@ impl Dielectric {
         Material::Dielectric(Self { ref_index })
     }
 
-    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let attenuation = Color::from(1);
 
         let etai_over_etat = if rec.front_face {

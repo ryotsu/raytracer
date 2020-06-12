@@ -16,7 +16,7 @@ impl Metal {
         })
     }
 
-    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let reflected = ray_in.direction.unit_vector().reflect(rec.normal);
         let scattered = Ray::new(
             rec.p,

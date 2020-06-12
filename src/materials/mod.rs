@@ -35,7 +35,7 @@ impl Material {
 
     pub fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
         match self {
-            Material::DiffuseLight(m) => m.emmitted(u, v, p),
+            Material::DiffuseLight(m) => m.emitted(u, v, p),
             _ => Color::from(0),
         }
     }

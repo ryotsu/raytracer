@@ -8,7 +8,7 @@ pub struct MovingSphere {
     time_min: f64,
     time_max: f64,
     radius: f64,
-    material: Box<dyn Material>,
+    material: Material,
 }
 
 impl MovingSphere {
@@ -18,7 +18,7 @@ impl MovingSphere {
         time_min: f64,
         time_max: f64,
         radius: f64,
-        material: Box<dyn Material>,
+        material: Material,
     ) -> Self {
         Self {
             center_min,
@@ -55,7 +55,7 @@ impl Hittable for MovingSphere {
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center(ray.time)) / self.radius;
                 rec.set_face_normal(ray, outward_normal);
-                rec.material = self.material.box_clone();
+                rec.material = self.material.clone();
                 return true;
             }
 
@@ -65,7 +65,7 @@ impl Hittable for MovingSphere {
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center(ray.time)) / self.radius;
                 rec.set_face_normal(ray, outward_normal);
-                rec.material = self.material.box_clone();
+                rec.material = self.material.clone();
                 return true;
             }
         }

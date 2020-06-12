@@ -11,7 +11,7 @@ pub struct Boxx {
 }
 
 impl Boxx {
-    pub fn new(min: Point, max: Point, material: Box<dyn Material>) -> Self {
+    pub fn new(min: Point, max: Point, material: Material) -> Self {
         let mut sides = HittableList::new();
 
         sides.add(Arc::new(XYRect::new(
@@ -20,7 +20,7 @@ impl Boxx {
             min.y(),
             max.y(),
             max.z(),
-            material.box_clone(),
+            material.clone(),
         )));
         sides.add(Arc::new(FlipFace::new(Arc::new(XYRect::new(
             min.x(),
@@ -28,7 +28,7 @@ impl Boxx {
             min.y(),
             max.y(),
             min.z(),
-            material.box_clone(),
+            material.clone(),
         )))));
 
         sides.add(Arc::new(XZRect::new(
@@ -37,7 +37,7 @@ impl Boxx {
             min.z(),
             max.z(),
             max.y(),
-            material.box_clone(),
+            material.clone(),
         )));
         sides.add(Arc::new(FlipFace::new(Arc::new(XZRect::new(
             min.x(),
@@ -45,7 +45,7 @@ impl Boxx {
             min.z(),
             max.z(),
             min.y(),
-            material.box_clone(),
+            material.clone(),
         )))));
 
         sides.add(Arc::new(YZRect::new(
@@ -54,7 +54,7 @@ impl Boxx {
             min.z(),
             max.z(),
             max.x(),
-            material.box_clone(),
+            material.clone(),
         )));
         sides.add(Arc::new(FlipFace::new(Arc::new(YZRect::new(
             min.y(),
@@ -62,7 +62,7 @@ impl Boxx {
             min.z(),
             max.z(),
             min.x(),
-            material.box_clone(),
+            material.clone(),
         )))));
 
         Self { min, max, sides }

@@ -8,11 +8,11 @@ pub struct XYRect {
     y0: f64,
     y1: f64,
     k: f64,
-    material: Box<dyn Material>,
+    material: Material,
 }
 
 impl XYRect {
-    pub fn new(x0: f64, x1: f64, y0: f64, y1: f64, k: f64, material: Box<dyn Material>) -> Self {
+    pub fn new(x0: f64, x1: f64, y0: f64, y1: f64, k: f64, material: Material) -> Self {
         Self {
             x0,
             x1,
@@ -42,7 +42,7 @@ impl Hittable for XYRect {
         rec.t = t;
         let outward_normal = Vector::new(0, 0, 1);
         rec.set_face_normal(ray, outward_normal);
-        rec.material = self.material.box_clone();
+        rec.material = self.material.clone();
         rec.p = ray.at(t);
         true
     }

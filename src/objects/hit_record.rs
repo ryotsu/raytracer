@@ -2,12 +2,11 @@ use crate::core::{Point, Ray, Vector};
 use crate::materials::{Lambertian, Material};
 use crate::textures::SolidColor;
 use std::mem;
-use std::sync::Arc;
 
 pub struct HitRecord {
     pub p: Point,
     pub normal: Vector,
-    pub material: Box<dyn Material>,
+    pub material: Material,
     pub t: f64,
     pub u: f64,
     pub v: f64,
@@ -19,7 +18,7 @@ impl HitRecord {
         Self {
             p: Point::from(0),
             normal: Vector::from(0),
-            material: Box::new(Lambertian::new(Arc::new(SolidColor::from(0)))),
+            material: Lambertian::new(SolidColor::from(0)),
             t: 0.0,
             u: 0.0,
             v: 0.0,

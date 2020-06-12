@@ -13,7 +13,7 @@ impl Lambertian {
         Material::Lambertian(Self { albedo })
     }
 
-    fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
         let scatter_direction = rec.normal + Vector::random_unit_vector();
         let scattered = Ray::new(rec.p, scatter_direction, ray_in.time);
         let attenuation = self.albedo.value(rec.u, rec.v, rec.p);

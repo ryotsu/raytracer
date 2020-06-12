@@ -6,11 +6,11 @@ use std::f64::consts::PI;
 pub struct Sphere {
     center: Point,
     radius: f64,
-    material: Box<dyn Material>,
+    material: Material,
 }
 
 impl Sphere {
-    pub fn new(center: Point, radius: f64, material: Box<dyn Material>) -> Self {
+    pub fn new(center: Point, radius: f64, material: Material) -> Self {
         Self {
             center,
             radius,
@@ -43,7 +43,7 @@ impl Hittable for Sphere {
                 let outward_normal = (rec.p - self.center) / self.radius;
                 rec.set_face_normal(ray, outward_normal);
                 Self::get_sphere_uv((rec.p - self.center) / self.radius, &mut rec.u, &mut rec.v);
-                rec.material = self.material.box_clone();
+                rec.material = self.material.clone();
                 return true;
             }
             temp = (-half_b + root) / a;
@@ -53,7 +53,7 @@ impl Hittable for Sphere {
                 let outward_normal = (rec.p - self.center) / self.radius;
                 rec.set_face_normal(ray, outward_normal);
                 Self::get_sphere_uv((rec.p - self.center) / self.radius, &mut rec.u, &mut rec.v);
-                rec.material = self.material.box_clone();
+                rec.material = self.material.clone();
                 return true;
             }
         }

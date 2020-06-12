@@ -4,18 +4,20 @@ use crate::utils::clamp;
 
 use image::{self, DynamicImage, GenericImageView, ImageError, Pixel};
 
+use std::sync::Arc;
+
 #[derive(Clone)]
 pub struct Image {
-    img: DynamicImage,
+    img: Arc<DynamicImage>,
 }
 
 impl Image {
     pub fn new(filename: &str) -> Result<Texture, ImageError> {
         let img = image::open(filename)?;
-        Ok(Texture::Image(Self { img }))
+        Ok(Texture::Image(Self { img: Arc::new(img) }))
     }
 
-    fn value(&self, mut u: f64, mut v: f64, _p: Point) -> Color {
+    pub fn value(&self, mut u: f64, mut v: f64, _p: Point) -> Color {
         u = clamp(u, 0.0, 1.0);
         v = 1.0 - clamp(v, 0.0, 1.0);
 

@@ -13,11 +13,11 @@ impl DiffuseLight {
         Material::DiffuseLight(Self { emit })
     }
 
-    fn scatter(&self, _ray_in: &Ray, _rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(&self, _ray_in: &Ray, _rec: &HitRecord) -> Option<(Color, Ray)> {
         None
     }
 
-    fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
+    pub fn emitted(&self, u: f64, v: f64, p: Point) -> Color {
         self.emit.value(u, v, p)
     }
 }

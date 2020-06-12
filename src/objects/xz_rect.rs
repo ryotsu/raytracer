@@ -8,11 +8,11 @@ pub struct XZRect {
     z0: f64,
     z1: f64,
     k: f64,
-    material: Box<dyn Material>,
+    material: Material,
 }
 
 impl XZRect {
-    pub fn new(x0: f64, x1: f64, z0: f64, z1: f64, k: f64, material: Box<dyn Material>) -> Self {
+    pub fn new(x0: f64, x1: f64, z0: f64, z1: f64, k: f64, material: Material) -> Self {
         Self {
             x0,
             x1,
@@ -42,7 +42,7 @@ impl Hittable for XZRect {
         rec.t = t;
         let outward_normal = Vector::new(0, 1, 0);
         rec.set_face_normal(ray, outward_normal);
-        rec.material = self.material.box_clone();
+        rec.material = self.material.clone();
         rec.p = ray.at(t);
         true
     }

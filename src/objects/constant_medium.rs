@@ -9,16 +9,16 @@ use std::sync::Arc;
 
 pub struct ConstantMedium {
     boundary: Arc<dyn Hittable>,
-    phase_function: Box<dyn Material>,
+    phase_function: Material,
     neg_inv_density: f64,
 }
 
 impl ConstantMedium {
-    pub fn new(boundary: Arc<dyn Hittable>, density: f64, texture: Arc<dyn Texture>) -> Self {
+    pub fn new(boundary: Arc<dyn Hittable>, density: f64, texture: Texture) -> Self {
         Self {
             boundary,
             neg_inv_density: -1.0 / density,
-            phase_function: Box::new(Isotropic::new(texture)),
+            phase_function: Isotropic::new(texture),
         }
     }
 }
@@ -77,7 +77,7 @@ impl Hittable for ConstantMedium {
 
         rec.normal = Vector::new(1, 0, 0);
         rec.front_face = true;
-        rec.material = self.phase_function.box_clone();
+        rec.material = self.phase_function.clone();
 
         true
     }

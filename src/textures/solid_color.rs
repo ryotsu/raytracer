@@ -13,15 +13,15 @@ impl SolidColor {
         })
     }
 
-    pub fn from<T: Into<f64> + Copy>(a: T) -> Self {
+    pub fn from<T: Into<f64> + Copy>(a: T) -> Texture {
         Self::new(a, a, a)
     }
 
-    pub fn from_color(color: Color) -> Self {
-        Self { color }
+    pub fn from_color(color: Color) -> Texture {
+        Texture::SolidColor(Self { color })
     }
 
-    fn value(&self, _u: f64, _v: f64, _p: Point) -> Color {
+    pub fn value(&self, _u: f64, _v: f64, _p: Point) -> Color {
         self.color
     }
 }
