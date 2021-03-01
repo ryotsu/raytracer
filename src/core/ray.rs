@@ -3,6 +3,8 @@ use crate::objects::{HitRecord, Hittable};
 
 use std::f64::INFINITY;
 
+use rand::prelude::*;
+
 #[derive(Debug)]
 pub struct Ray {
     pub origin: Point,
@@ -23,22 +25,28 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    pub fn color<T: Hittable>(&self, background: Color, world: &T, depth: i8) -> Color {
+    pub fn color<T: Hittable>(
+        &self,
+        background: Color,
+        world: &T,
+        depth: i8,
+        rng: &mut ThreadRng,
+    ) -> Color {
         if depth <= 0 {
             return Color::from(0);
         }
 
         let mut rec = HitRecord::new();
 
-        if !world.hit(self, 0.001, INFINITY, &mut rec) {
+        if !world.hit(self, 0.001, INFINITY, &mut rec, rng) {
             return background;
         }
 
         let emitted = rec.material.emitted(rec.u, rec.v, rec.p);
 
-        match rec.material.scatter(self, &rec) {
+        match rec.material.scatter(self, &rec, rng) {
             Some((attenuation, scattered)) => {
-                emitted + attenuation * scattered.color(background, world, depth - 1)
+                emitted + attenuation * scattered.color(background, world, depth - 1, rng)
             }
             None => emitted,
         }

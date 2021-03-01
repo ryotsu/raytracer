@@ -1,9 +1,10 @@
 use super::{Aabb, HitRecord, Hittable};
 use crate::core::{Point, Ray};
-use crate::utils::random_int;
 
 use std::cmp::Ordering;
 use std::sync::Arc;
+
+use rand::prelude::*;
 
 pub struct BVHNode {
     left: Arc<dyn Hittable>,
@@ -12,8 +13,13 @@ pub struct BVHNode {
 }
 
 impl BVHNode {
-    pub fn new(objects: &mut [Arc<dyn Hittable>], t_min: f64, t_max: f64) -> Self {
-        let axis = random_int(0, 3);
+    pub fn new(
+        objects: &mut [Arc<dyn Hittable>],
+        t_min: f64,
+        t_max: f64,
+        rng: &mut ThreadRng,
+    ) -> Self {
+        let axis = rng.gen_range(0, 3);
         let comparator = match axis {
             0 => box_x_compare,
             1 => box_y_compare,
@@ -39,8 +45,8 @@ impl BVHNode {
         } else {
             objects.sort_by(comparator);
             let mid = object_span / 2;
-            left = Arc::new(Self::new(&mut objects[0..mid], t_min, t_max));
-            right = Arc::new(Self::new(&mut objects[mid..], t_min, t_max));
+            left = Arc::new(Self::new(&mut objects[0..mid], t_min, t_max, rng));
+            right = Arc::new(Self::new(&mut objects[mid..], t_min, t_max, rng));
         }
 
         let mut box_left = Aabb::new(Point::from(0), Point::from(0));
@@ -59,15 +65,22 @@ impl BVHNode {
 }
 
 impl Hittable for BVHNode {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool {
         if !self.boxx.hit(ray, t_min, t_max) {
             return false;
         }
 
-        let hit_left = self.left.hit(ray, t_min, t_max, rec);
+        let hit_left = self.left.hit(ray, t_min, t_max, rec, rng);
         let hit_right = self
             .right
-            .hit(ray, t_min, if hit_left { rec.t } else { t_max }, rec);
+            .hit(ray, t_min, if hit_left { rec.t } else { t_max }, rec, rng);
 
         hit_left || hit_right
     }

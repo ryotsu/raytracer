@@ -2,6 +2,8 @@ use super::Material;
 use crate::core::{Color, Ray, Vector};
 use crate::objects::HitRecord;
 
+use rand::prelude::*;
+
 #[derive(Clone)]
 pub struct Metal {
     albedo: Color,
@@ -16,11 +18,16 @@ impl Metal {
         })
     }
 
-    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(
+        &self,
+        ray_in: &Ray,
+        rec: &HitRecord,
+        rng: &mut ThreadRng,
+    ) -> Option<(Color, Ray)> {
         let reflected = ray_in.direction.unit_vector().reflect(rec.normal);
         let scattered = Ray::new(
             rec.p,
-            reflected + Vector::random_in_unit_sphere() * self.fuzz,
+            reflected + Vector::random_in_unit_sphere(rng) * self.fuzz,
             ray_in.time,
         );
         let attenuation = self.albedo;

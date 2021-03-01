@@ -3,6 +3,8 @@ use crate::core::{Ray, Vector};
 
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 pub struct Translate {
     object: Arc<dyn Hittable>,
     offset: Vector,
@@ -15,10 +17,17 @@ impl Translate {
 }
 
 impl Hittable for Translate {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool {
         let moved_ray = Ray::new(ray.origin - self.offset, ray.direction, ray.time);
 
-        if !self.object.hit(&moved_ray, t_min, t_max, rec) {
+        if !self.object.hit(&moved_ray, t_min, t_max, rec, rng) {
             return false;
         }
 

@@ -3,6 +3,8 @@ use crate::core::{Color, Ray, Vector};
 use crate::objects::HitRecord;
 use crate::textures::Texture;
 
+use rand::prelude::*;
+
 #[derive(Clone)]
 pub struct Isotropic {
     albedo: Texture,
@@ -13,8 +15,13 @@ impl Isotropic {
         Material::Isotropic(Self { albedo })
     }
 
-    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
-        let scattered = Ray::new(rec.p, Vector::random_in_unit_sphere(), ray_in.time);
+    pub fn scatter(
+        &self,
+        ray_in: &Ray,
+        rec: &HitRecord,
+        rng: &mut ThreadRng,
+    ) -> Option<(Color, Ray)> {
+        let scattered = Ray::new(rec.p, Vector::random_in_unit_sphere(rng), ray_in.time);
         let attenuation = self.albedo.value(rec.u, rec.v, rec.p);
         Some((attenuation, scattered))
     }

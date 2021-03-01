@@ -1,7 +1,6 @@
 use crate::core::{Point, Vector};
 
-use rand::seq::SliceRandom;
-use rand::thread_rng;
+use rand::prelude::*;
 
 const POINT_COUNT: usize = 256;
 
@@ -14,11 +13,11 @@ pub struct Perlin {
 }
 
 impl Perlin {
-    pub fn new() -> Self {
+    pub fn new(rng: &mut ThreadRng) -> Self {
         let mut ranvec = vec![];
 
         for _ in 0..POINT_COUNT {
-            ranvec.push(Vector::random_in(-1.0, 1.0).unit_vector());
+            ranvec.push(Vector::random_in(-1.0, 1.0, rng).unit_vector());
         }
 
         let perm_x = Self::generate_perm();

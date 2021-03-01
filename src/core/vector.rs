@@ -1,8 +1,10 @@
-use crate::utils::{clamp, random, random_in};
+use crate::utils::clamp;
 
 use std::f64::consts::PI;
 use std::fmt;
 use std::ops;
+
+use rand::prelude::*;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector {
@@ -74,40 +76,32 @@ impl Vector {
         r_out_parallel + r_out_perpendicular
     }
 
-    pub fn random() -> Self {
+    pub fn random_in(low: f64, high: f64, rng: &mut ThreadRng) -> Self {
         Self {
-            x: random(),
-            y: random(),
-            z: random(),
+            x: rng.gen_range(low, high),
+            y: rng.gen_range(low, high),
+            z: rng.gen_range(low, high),
         }
     }
 
-    pub fn random_in(min: f64, max: f64) -> Self {
-        Self {
-            x: random_in(min, max),
-            y: random_in(min, max),
-            z: random_in(min, max),
-        }
-    }
-
-    pub fn random_in_unit_sphere() -> Self {
+    pub fn random_in_unit_sphere(rng: &mut ThreadRng) -> Self {
         loop {
-            let p = Self::random_in(-1.0, 1.0);
+            let p = rng.gen::<Vector>() * 2.0 - Self::from(1);
             if p.length_squared() < 1.0 {
                 return p;
             }
         }
     }
 
-    pub fn random_unit_vector() -> Self {
-        let a = random_in(0.0, 2.0 * PI);
-        let z = random_in(-1.0, 1.0);
+    pub fn random_unit_vector(rng: &mut ThreadRng) -> Self {
+        let a = rng.gen_range(0.0, 2.0 * PI);
+        let z: f64 = rng.gen_range(-1.0, 1.0);
         let r = (1.0 - z * z).sqrt();
         Self::new(r * a.cos(), r * a.sin(), z)
     }
 
-    pub fn random_in_hemisphere(normal: Self) -> Self {
-        let in_unit_sphere = Self::random_in_unit_sphere();
+    pub fn random_in_hemisphere(normal: Self, rng: &mut ThreadRng) -> Self {
+        let in_unit_sphere = Self::random_in_unit_sphere(rng);
         if in_unit_sphere.dot(normal) > 0.0 {
             in_unit_sphere
         } else {
@@ -115,9 +109,9 @@ impl Vector {
         }
     }
 
-    pub fn random_in_unit_disk() -> Self {
+    pub fn random_in_unit_disk(rng: &mut ThreadRng) -> Self {
         loop {
-            let p = Self::new(random_in(-1.0, 1.0), random_in(-1.0, 1.0), 0.0);
+            let p = Self::new(rng.gen::<f64>(), rng.gen::<f64>(), 0.0) * 2.0 - Self::new(1, 1, 0);
             if p.length_squared() < 1.0 {
                 return p;
             }
@@ -258,5 +252,15 @@ impl ops::Div<f64> for &Vector {
 impl fmt::Display for Vector {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} {} {}", self.x, self.y, self.z)
+    }
+}
+
+impl Distribution<Vector> for rand::distributions::Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Vector {
+        Vector {
+            x: rng.gen(),
+            y: rng.gen(),
+            z: rng.gen(),
+        }
     }
 }

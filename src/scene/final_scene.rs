@@ -2,12 +2,13 @@ use crate::core::{Color, Point, Vector};
 use crate::materials::{Dielectric, DiffuseLight, Lambertian, Metal};
 use crate::objects::*;
 use crate::textures::{Image, Noise, SolidColor};
-use crate::utils::random_in;
 
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 #[allow(dead_code)]
-pub fn scene() -> HittableList {
+pub fn scene(rng: &mut ThreadRng) -> HittableList {
     let mut boxes = HittableList::new();
 
     let ground = Lambertian::new(SolidColor::new(0.48, 0.93, 0.53));
@@ -21,7 +22,7 @@ pub fn scene() -> HittableList {
             let z0 = -1000.0 + j as f64 * w;
             let y0 = 0.0;
             let x1 = x0 + w;
-            let y1 = random_in(1.0, 101.0);
+            let y1 = rng.gen_range(1.0, 101.0);
             let z1 = z0 + w;
 
             boxes.add(Arc::new(Boxx::new(
@@ -34,7 +35,12 @@ pub fn scene() -> HittableList {
 
     let mut world = HittableList::new();
 
-    world.add(Arc::new(BVHNode::new(&mut boxes.objects[..], 0.0, 1.0)));
+    world.add(Arc::new(BVHNode::new(
+        &mut boxes.objects[..],
+        0.0,
+        1.0,
+        rng,
+    )));
 
     let light = DiffuseLight::new(SolidColor::from(7.0));
     world.add(Arc::new(XZRect::new(
@@ -91,7 +97,7 @@ pub fn scene() -> HittableList {
         emat,
     )));
 
-    let pertext = Lambertian::new(Noise::new(0.05));
+    let pertext = Lambertian::new(Noise::new(0.05, rng));
     world.add(Arc::new(Sphere::new(
         Point::new(220, 280, 300),
         80.0,
@@ -103,7 +109,7 @@ pub fn scene() -> HittableList {
     let ns = 1000;
     for _ in 0..ns {
         boxes2.add(Arc::new(Sphere::new(
-            Point::random_in(0.0, 165.0),
+            Point::random_in(0.0, 165.0, rng),
             10.0,
             white.clone(),
         )));
@@ -111,7 +117,7 @@ pub fn scene() -> HittableList {
 
     world.add(Arc::new(Translate::new(
         Arc::new(RotateY::new(
-            Arc::new(BVHNode::new(&mut boxes2.objects[..], 0.0, 1.0)),
+            Arc::new(BVHNode::new(&mut boxes2.objects[..], 0.0, 1.0, rng)),
             15.0,
         )),
         Vector::new(-100, 270, 395),

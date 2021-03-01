@@ -30,7 +30,16 @@ pub use xy_rect::XYRect;
 pub use xz_rect::XZRect;
 pub use yz_rect::YZRect;
 
+use rand::prelude::*;
+
 pub trait Hittable: Send + Sync {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool;
     fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool;
 }

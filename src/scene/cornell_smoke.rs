@@ -5,8 +5,10 @@ use crate::textures::SolidColor;
 
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 #[allow(dead_code)]
-pub fn scene() -> HittableList {
+pub fn scene(_rng: &mut ThreadRng) -> HittableList {
     let mut world = HittableList::new();
 
     let red = Lambertian::new(SolidColor::new(0.65, 0.05, 0.05));

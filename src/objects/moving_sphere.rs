@@ -2,6 +2,8 @@ use super::{Aabb, HitRecord, Hittable};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
+use rand::prelude::*;
+
 pub struct MovingSphere {
     center_min: Point,
     center_max: Point,
@@ -38,7 +40,14 @@ impl MovingSphere {
 }
 
 impl Hittable for MovingSphere {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        _rng: &mut ThreadRng,
+    ) -> bool {
         let oc = ray.origin - self.center(ray.time);
         let a = ray.direction.length_squared();
         let half_b = oc.dot(ray.direction);

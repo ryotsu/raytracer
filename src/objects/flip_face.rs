@@ -3,6 +3,8 @@ use crate::core::Ray;
 
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 pub struct FlipFace {
     hittable: Arc<dyn Hittable>,
 }
@@ -14,8 +16,15 @@ impl FlipFace {
 }
 
 impl Hittable for FlipFace {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
-        if !self.hittable.hit(ray, t_min, t_max, rec) {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool {
+        if !self.hittable.hit(ray, t_min, t_max, rec, rng) {
             return false;
         }
 

@@ -1,9 +1,10 @@
 use rayon::prelude::*;
 
+use rand::prelude::*;
+
 use raytracer::core::{Camera, Color, Point, Vector};
 use raytracer::objects::BVHNode;
 use raytracer::scene;
-use raytracer::utils::random;
 use std::f64::INFINITY;
 
 fn main() {
@@ -17,8 +18,10 @@ fn main() {
 
     println!("P3\n {} {}\n255", image_width, image_height);
 
-    let mut world = scene::scene();
-    let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY);
+    let mut rng = rand::thread_rng();
+
+    let mut world = scene::scene(&mut rng);
+    let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY, &mut rng);
 
     let look_from = Point::new(478, 278, -600);
     let look_at = Point::new(278, 278, 0);
@@ -44,12 +47,13 @@ fn main() {
         let line = (0..image_width)
             .into_par_iter()
             .map(|i| {
+                let mut rng = thread_rng();
                 let mut pixel_color = Color::from(0);
                 for _ in 0..samples_per_pixel {
-                    let u = (i as f64 + random()) / (image_width as f64 - 1.0);
-                    let v = (j as f64 + random()) / (image_height as f64 - 1.0);
-                    let ray = camera.ray(u, v);
-                    pixel_color += ray.color(background, &world_bvh, max_depth);
+                    let u = (i as f64 + rng.gen::<f64>()) / (image_width as f64 - 1.0);
+                    let v = (j as f64 + rng.gen::<f64>()) / (image_height as f64 - 1.0);
+                    let ray = camera.ray(u, v, &mut rng);
+                    pixel_color += ray.color(background, &world_bvh, max_depth, &mut rng);
                 }
                 pixel_color.write_color(samples_per_pixel)
             })

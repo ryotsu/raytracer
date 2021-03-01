@@ -5,6 +5,8 @@ use crate::utils::degrees_to_radians;
 use std::f64::INFINITY;
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 pub struct RotateY {
     object: Arc<dyn Hittable>,
     sin_theta: f64,
@@ -61,7 +63,14 @@ impl RotateY {
 }
 
 impl Hittable for RotateY {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool {
         let mut origin = ray.origin;
         let mut direction = ray.direction;
 
@@ -73,7 +82,7 @@ impl Hittable for RotateY {
 
         let rotated_ray = Ray::new(origin, direction, ray.time);
 
-        if !self.object.hit(&rotated_ray, t_min, t_max, rec) {
+        if !self.object.hit(&rotated_ray, t_min, t_max, rec, rng) {
             return false;
         }
 

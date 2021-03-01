@@ -4,6 +4,8 @@ use crate::core::{Color, Point};
 
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 #[derive(Clone)]
 pub struct Noise {
     noise: Arc<Perlin>,
@@ -11,9 +13,9 @@ pub struct Noise {
 }
 
 impl Noise {
-    pub fn new(scale: f64) -> Texture {
+    pub fn new(scale: f64, rng: &mut ThreadRng) -> Texture {
         Texture::Noise(Self {
-            noise: Arc::new(Perlin::new()),
+            noise: Arc::new(Perlin::new(rng)),
             scale,
         })
     }

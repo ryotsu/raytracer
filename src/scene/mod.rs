@@ -8,6 +8,8 @@ mod random_scene;
 mod simple_light;
 mod two_spheres;
 
-pub fn scene() -> HittableList {
-    final_scene::scene()
+use rand::prelude::*;
+
+pub fn scene(rng: &mut ThreadRng) -> HittableList {
+    final_scene::scene(rng)
 }

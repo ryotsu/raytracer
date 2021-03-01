@@ -2,6 +2,8 @@ use super::{Aabb, HitRecord, Hittable};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
+use rand::prelude::*;
+
 pub struct YZRect {
     y0: f64,
     y1: f64,
@@ -25,7 +27,14 @@ impl YZRect {
 }
 
 impl Hittable for YZRect {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        _rng: &mut ThreadRng,
+    ) -> bool {
         let t = (self.k - ray.origin.x()) / ray.direction.x();
         if t < t_min || t > t_max {
             return false;

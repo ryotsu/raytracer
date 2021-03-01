@@ -1,5 +1,7 @@
 use super::{Point, Ray, Vector};
-use crate::utils::{degrees_to_radians, random_in};
+use crate::utils::degrees_to_radians;
+
+use rand::prelude::*;
 
 pub struct Camera {
     origin: Point,
@@ -57,14 +59,14 @@ impl Camera {
         }
     }
 
-    pub fn ray(&self, s: f64, t: f64) -> Ray {
-        let rd = Vector::random_in_unit_disk() * self.lens_radius;
+    pub fn ray(&self, s: f64, t: f64, rng: &mut ThreadRng) -> Ray {
+        let rd = Vector::random_in_unit_disk(rng) * self.lens_radius;
         let offset = self.u * rd.x() + self.v * rd.y();
 
         Ray::new(
             self.origin + offset,
             self.lower_left_corner + self.horizontal * s + self.vertical * t - self.origin - offset,
-            random_in(self.time_min, self.time_max),
+            rng.gen_range(self.time_min, self.time_max),
         )
     }
 }

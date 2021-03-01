@@ -1,7 +1,9 @@
 use super::Material;
 use crate::core::{Color, Ray};
 use crate::objects::HitRecord;
-use crate::utils::{random, schlick};
+use crate::utils::schlick;
+
+use rand::prelude::*;
 
 #[derive(Clone)]
 pub struct Dielectric {
@@ -13,7 +15,12 @@ impl Dielectric {
         Material::Dielectric(Self { ref_index })
     }
 
-    pub fn scatter(&self, ray_in: &Ray, rec: &HitRecord) -> Option<(Color, Ray)> {
+    pub fn scatter(
+        &self,
+        ray_in: &Ray,
+        rec: &HitRecord,
+        rng: &mut ThreadRng,
+    ) -> Option<(Color, Ray)> {
         let attenuation = Color::from(1);
 
         let etai_over_etat = if rec.front_face {
@@ -32,7 +39,7 @@ impl Dielectric {
         }
 
         let reflect_prob = schlick(cos_theta, etai_over_etat);
-        if random() < reflect_prob {
+        if rng.gen::<f64>() < reflect_prob {
             let reflected = unit_direction.reflect(rec.normal);
             let scattered = Ray::new(rec.p, reflected, ray_in.time);
             return Some((attenuation, scattered));

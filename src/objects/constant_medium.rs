@@ -2,10 +2,11 @@ use super::{Aabb, HitRecord, Hittable};
 use crate::core::{Ray, Vector};
 use crate::materials::{Isotropic, Material};
 use crate::textures::Texture;
-use crate::utils::random;
 
 use std::f64::INFINITY;
 use std::sync::Arc;
+
+use rand::prelude::*;
 
 pub struct ConstantMedium {
     boundary: Arc<dyn Hittable>,
@@ -24,23 +25,26 @@ impl ConstantMedium {
 }
 
 impl Hittable for ConstantMedium {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
-        let enable_debug = false;
-        let debugging = enable_debug && random() < 0.00001;
-
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool {
         let mut rec1 = HitRecord::new();
         let mut rec2 = HitRecord::new();
 
-        if !self.boundary.hit(ray, -INFINITY, INFINITY, &mut rec1) {
+        if !self.boundary.hit(ray, -INFINITY, INFINITY, &mut rec1, rng) {
             return false;
         }
 
-        if !self.boundary.hit(ray, rec1.t + 0.0001, INFINITY, &mut rec2) {
+        if !self
+            .boundary
+            .hit(ray, rec1.t + 0.0001, INFINITY, &mut rec2, rng)
+        {
             return false;
-        }
-
-        if debugging {
-            eprintln!("\nt0={}, t1={}", rec1.t, rec2.t);
         }
 
         if rec1.t < t_min {
@@ -60,7 +64,7 @@ impl Hittable for ConstantMedium {
 
         let ray_length = ray.direction.length();
         let distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
-        let hit_distance = self.neg_inv_density * random().log2();
+        let hit_distance = self.neg_inv_density * rng.gen::<f64>().log2();
 
         if hit_distance > distance_inside_boundary {
             return false;
@@ -68,12 +72,6 @@ impl Hittable for ConstantMedium {
 
         rec.t = rec1.t + hit_distance / ray_length;
         rec.p = ray.at(rec.t);
-
-        if debugging {
-            eprintln!("hit_distance = {}", hit_distance);
-            eprintln!("rec.t = {}", rec.t);
-            eprintln!("rec.p = {}", rec.p);
-        }
 
         rec.normal = Vector::new(1, 0, 0);
         rec.front_face = true;

@@ -3,6 +3,8 @@ use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 use std::f64::consts::PI;
 
+use rand::prelude::*;
+
 pub struct Sphere {
     center: Point,
     radius: f64,
@@ -27,7 +29,14 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        _rng: &mut ThreadRng,
+    ) -> bool {
         let oc = ray.origin - self.center;
         let a = ray.direction.length_squared();
         let half_b = oc.dot(ray.direction);

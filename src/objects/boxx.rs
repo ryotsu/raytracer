@@ -4,6 +4,8 @@ use crate::materials::Material;
 
 use std::sync::Arc;
 
+use rand::prelude::*;
+
 pub struct Boxx {
     min: Point,
     max: Point,
@@ -70,8 +72,15 @@ impl Boxx {
 }
 
 impl Hittable for Boxx {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
-        self.sides.hit(ray, t_min, t_max, rec)
+    fn hit(
+        &self,
+        ray: &Ray,
+        t_min: f64,
+        t_max: f64,
+        rec: &mut HitRecord,
+        rng: &mut ThreadRng,
+    ) -> bool {
+        self.sides.hit(ray, t_min, t_max, rec, rng)
     }
 
     fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
