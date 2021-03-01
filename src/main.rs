@@ -17,7 +17,7 @@ fn main() {
 
     println!("P3\n {} {}\n255", image_width, image_height);
 
-    let mut world = scene::final_scene();
+    let mut world = scene::scene();
     let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY);
 
     let look_from = Point::new(478, 278, -600);
