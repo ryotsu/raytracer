@@ -32,7 +32,7 @@ pub use yz_rect::YZRect;
 
 use rand::prelude::*;
 
-pub trait Hittable: Send + Sync {
+pub trait Object: Send + Sync {
     fn hit(
         &self,
         ray: &Ray,

@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray};
 
 use std::cmp::Ordering;
@@ -7,14 +7,14 @@ use std::sync::Arc;
 use rand::prelude::*;
 
 pub struct BVHNode {
-    left: Arc<dyn Hittable>,
-    right: Arc<dyn Hittable>,
+    left: Arc<dyn Object>,
+    right: Arc<dyn Object>,
     boxx: Aabb,
 }
 
 impl BVHNode {
     pub fn new(
-        objects: &mut [Arc<dyn Hittable>],
+        objects: &mut [Arc<dyn Object>],
         t_min: f64,
         t_max: f64,
         rng: &mut ThreadRng,
@@ -64,7 +64,7 @@ impl BVHNode {
     }
 }
 
-impl Hittable for BVHNode {
+impl Object for BVHNode {
     fn hit(
         &self,
         ray: &Ray,
@@ -91,7 +91,7 @@ impl Hittable for BVHNode {
     }
 }
 
-fn box_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>, axis: usize) -> Ordering {
+fn box_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>, axis: usize) -> Ordering {
     let mut box_a = Aabb::new(Point::from(0), Point::from(0));
     let mut box_b = Aabb::new(Point::from(0), Point::from(0));
 
@@ -102,14 +102,14 @@ fn box_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>, axis: usize) -> Ord
     box_a.min[axis].partial_cmp(&box_b.min[axis]).unwrap()
 }
 
-fn box_x_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>) -> Ordering {
+fn box_x_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>) -> Ordering {
     box_compare(a, b, 0)
 }
 
-fn box_y_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>) -> Ordering {
+fn box_y_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>) -> Ordering {
     box_compare(a, b, 1)
 }
 
-fn box_z_compare(a: &Arc<dyn Hittable>, b: &Arc<dyn Hittable>) -> Ordering {
+fn box_z_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>) -> Ordering {
     box_compare(a, b, 2)
 }

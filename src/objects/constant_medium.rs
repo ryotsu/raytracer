@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Ray, Vector};
 use crate::materials::{Isotropic, Material};
 use crate::textures::Texture;
@@ -9,13 +9,13 @@ use std::sync::Arc;
 use rand::prelude::*;
 
 pub struct ConstantMedium {
-    boundary: Arc<dyn Hittable>,
+    boundary: Arc<dyn Object>,
     phase_function: Material,
     neg_inv_density: f64,
 }
 
 impl ConstantMedium {
-    pub fn new(boundary: Arc<dyn Hittable>, density: f64, texture: Texture) -> Self {
+    pub fn new(boundary: Arc<dyn Object>, density: f64, texture: Texture) -> Self {
         Self {
             boundary,
             neg_inv_density: -1.0 / density,
@@ -24,7 +24,7 @@ impl ConstantMedium {
     }
 }
 
-impl Hittable for ConstantMedium {
+impl Object for ConstantMedium {
     fn hit(
         &self,
         ray: &Ray,

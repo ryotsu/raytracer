@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::Ray;
 
 use std::sync::Arc;
@@ -6,16 +6,16 @@ use std::sync::Arc;
 use rand::prelude::*;
 
 pub struct FlipFace {
-    hittable: Arc<dyn Hittable>,
+    hittable: Arc<dyn Object>,
 }
 
 impl FlipFace {
-    pub fn new(hittable: Arc<dyn Hittable>) -> Self {
+    pub fn new(hittable: Arc<dyn Object>) -> Self {
         Self { hittable }
     }
 }
 
-impl Hittable for FlipFace {
+impl Object for FlipFace {
     fn hit(
         &self,
         ray: &Ray,

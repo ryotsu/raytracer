@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Ray, Vector};
 
 use std::sync::Arc;
@@ -6,17 +6,17 @@ use std::sync::Arc;
 use rand::prelude::*;
 
 pub struct Translate {
-    object: Arc<dyn Hittable>,
+    object: Arc<dyn Object>,
     offset: Vector,
 }
 
 impl Translate {
-    pub fn new(object: Arc<dyn Hittable>, offset: Vector) -> Self {
+    pub fn new(object: Arc<dyn Object>, offset: Vector) -> Self {
         Self { object, offset }
     }
 }
 
-impl Hittable for Translate {
+impl Object for Translate {
     fn hit(
         &self,
         ray: &Ray,

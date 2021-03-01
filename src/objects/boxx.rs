@@ -1,4 +1,4 @@
-use super::{Aabb, FlipFace, HitRecord, Hittable, HittableList, XYRect, XZRect, YZRect};
+use super::{Aabb, FlipFace, HitRecord, HittableList, Object, XYRect, XZRect, YZRect};
 use crate::core::{Point, Ray};
 use crate::materials::Material;
 
@@ -71,7 +71,7 @@ impl Boxx {
     }
 }
 
-impl Hittable for Boxx {
+impl Object for Boxx {
     fn hit(
         &self,
         ray: &Ray,

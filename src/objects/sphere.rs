@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 use std::f64::consts::PI;
@@ -28,7 +28,7 @@ impl Sphere {
     }
 }
 
-impl Hittable for Sphere {
+impl Object for Sphere {
     fn hit(
         &self,
         ray: &Ray,

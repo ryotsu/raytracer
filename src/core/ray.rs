@@ -1,5 +1,5 @@
 use super::{Color, Point, Vector};
-use crate::objects::{HitRecord, Hittable};
+use crate::objects::{HitRecord, Object};
 
 use std::f64::INFINITY;
 
@@ -25,7 +25,7 @@ impl Ray {
         self.origin + self.direction * t
     }
 
-    pub fn color<T: Hittable>(
+    pub fn color<T: Object>(
         &self,
         background: Color,
         world: &T,

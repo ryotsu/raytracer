@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray, Vector};
 use crate::utils::degrees_to_radians;
 
@@ -8,7 +8,7 @@ use std::sync::Arc;
 use rand::prelude::*;
 
 pub struct RotateY {
-    object: Arc<dyn Hittable>,
+    object: Arc<dyn Object>,
     sin_theta: f64,
     cos_theta: f64,
     hasbox: bool,
@@ -16,7 +16,7 @@ pub struct RotateY {
 }
 
 impl RotateY {
-    pub fn new(object: Arc<dyn Hittable>, angle: f64) -> Self {
+    pub fn new(object: Arc<dyn Object>, angle: f64) -> Self {
         let radians = degrees_to_radians(angle);
         let sin_theta = radians.sin();
         let cos_theta = radians.cos();
@@ -62,7 +62,7 @@ impl RotateY {
     }
 }
 
-impl Hittable for RotateY {
+impl Object for RotateY {
     fn hit(
         &self,
         ray: &Ray,

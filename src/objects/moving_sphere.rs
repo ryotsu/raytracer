@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
@@ -39,7 +39,7 @@ impl MovingSphere {
     }
 }
 
-impl Hittable for MovingSphere {
+impl Object for MovingSphere {
     fn hit(
         &self,
         ray: &Ray,

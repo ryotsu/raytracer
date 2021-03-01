@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray};
 
 use std::sync::Arc;
@@ -6,7 +6,7 @@ use std::sync::Arc;
 use rand::prelude::*;
 
 pub struct HittableList {
-    pub objects: Vec<Arc<dyn Hittable>>,
+    pub objects: Vec<Arc<dyn Object>>,
 }
 
 impl HittableList {
@@ -16,12 +16,12 @@ impl HittableList {
         }
     }
 
-    pub fn add(&mut self, object: Arc<dyn Hittable>) {
+    pub fn add(&mut self, object: Arc<dyn Object>) {
         self.objects.push(object);
     }
 }
 
-impl Hittable for HittableList {
+impl Object for HittableList {
     fn hit(
         &self,
         ray: &Ray,

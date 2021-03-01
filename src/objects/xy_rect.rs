@@ -1,4 +1,4 @@
-use super::{Aabb, HitRecord, Hittable};
+use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
@@ -26,7 +26,7 @@ impl XYRect {
     }
 }
 
-impl Hittable for XYRect {
+impl Object for XYRect {
     fn hit(
         &self,
         ray: &Ray,
