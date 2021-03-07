@@ -38,7 +38,7 @@ impl Ray {
 
         let mut rec = HitRecord::new();
 
-        if !world.hit(self, 0.001, INFINITY, &mut rec, rng) {
+        if !world.hit(self, 0.001..INFINITY, &mut rec, rng) {
             return background;
         }
 

@@ -3,7 +3,8 @@ use crate::core::{Ray, Vector};
 use crate::materials::{Isotropic, Material};
 use crate::textures::Texture;
 
-use std::f64::INFINITY;
+use std::f64::{INFINITY, NEG_INFINITY};
+use std::ops::Range;
 use std::sync::Arc;
 
 use rand::prelude::*;
@@ -28,30 +29,32 @@ impl Object for ConstantMedium {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool {
         let mut rec1 = HitRecord::new();
         let mut rec2 = HitRecord::new();
 
-        if !self.boundary.hit(ray, -INFINITY, INFINITY, &mut rec1, rng) {
+        if !self
+            .boundary
+            .hit(ray, NEG_INFINITY..INFINITY, &mut rec1, rng)
+        {
             return false;
         }
 
         if !self
             .boundary
-            .hit(ray, rec1.t + 0.0001, INFINITY, &mut rec2, rng)
+            .hit(ray, (rec1.t + 0.0001)..INFINITY, &mut rec2, rng)
         {
             return false;
         }
 
-        if rec1.t < t_min {
-            rec1.t = t_min;
+        if rec1.t < t_range.start {
+            rec1.t = t_range.start;
         }
-        if rec2.t > t_max {
-            rec2.t = t_max;
+        if rec2.t > t_range.end {
+            rec2.t = t_range.end;
         }
 
         if rec1.t >= rec2.t {
@@ -80,7 +83,7 @@ impl Object for ConstantMedium {
         true
     }
 
-    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
-        self.boundary.bounding_box(t_min, t_max)
+    fn bounding_box(&self, t_range: Range<f64>) -> Aabb {
+        self.boundary.bounding_box(t_range)
     }
 }

@@ -1,6 +1,7 @@
 use super::{Aabb, HitRecord, Object};
 use crate::core::{Ray, Vector};
 
+use std::ops::Range;
 use std::sync::Arc;
 
 use rand::prelude::*;
@@ -20,14 +21,13 @@ impl Object for Translate {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool {
         let moved_ray = Ray::new(ray.origin - self.offset, ray.direction, ray.time);
 
-        if !self.object.hit(&moved_ray, t_min, t_max, rec, rng) {
+        if !self.object.hit(&moved_ray, t_range, rec, rng) {
             return false;
         }
 
@@ -37,8 +37,8 @@ impl Object for Translate {
         true
     }
 
-    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
-        let output_box = self.object.bounding_box(t_min, t_max);
+    fn bounding_box(&self, t_range: Range<f64>) -> Aabb {
+        let output_box = self.object.bounding_box(t_range);
 
         Aabb::new(output_box.min + self.offset, output_box.max + self.offset)
     }

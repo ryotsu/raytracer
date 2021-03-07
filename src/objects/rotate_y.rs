@@ -3,6 +3,7 @@ use crate::core::{Point, Ray, Vector};
 use crate::utils::degrees_to_radians;
 
 use std::f64::INFINITY;
+use std::ops::Range;
 use std::sync::Arc;
 
 use rand::prelude::*;
@@ -19,7 +20,7 @@ impl RotateY {
         let radians = degrees_to_radians(angle);
         let sin_theta = radians.sin();
         let cos_theta = radians.cos();
-        let mut bbox = object.bounding_box(0.0, 1.0);
+        let mut bbox = object.bounding_box(0.0..1.0);
 
         let mut min = Point::from(INFINITY);
         let mut max = Point::from(-INFINITY);
@@ -63,8 +64,7 @@ impl Object for RotateY {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool {
@@ -79,7 +79,7 @@ impl Object for RotateY {
 
         let rotated_ray = Ray::new(origin, direction, ray.time);
 
-        if !self.object.hit(&rotated_ray, t_min, t_max, rec, rng) {
+        if !self.object.hit(&rotated_ray, t_range, rec, rng) {
             return false;
         }
 
@@ -98,7 +98,7 @@ impl Object for RotateY {
         true
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+    fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {
         self.bbox.clone()
     }
 }

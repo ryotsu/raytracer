@@ -2,6 +2,8 @@ use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
+use std::ops::Range;
+
 use rand::prelude::*;
 
 pub struct MovingSphere {
@@ -43,8 +45,7 @@ impl Object for MovingSphere {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         _rng: &mut ThreadRng,
     ) -> bool {
@@ -59,7 +60,7 @@ impl Object for MovingSphere {
             let root = discriminant.sqrt();
 
             let mut temp = (-half_b - root) / a;
-            if t_min < temp && temp < t_max {
+            if t_range.start < temp && temp < t_range.end {
                 rec.t = temp;
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center(ray.time)) / self.radius;
@@ -69,7 +70,7 @@ impl Object for MovingSphere {
             }
 
             temp = (-half_b + root) / a;
-            if t_min < temp && temp < t_max {
+            if t_range.start < temp && temp < t_range.end {
                 rec.t = temp;
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center(ray.time)) / self.radius;
@@ -82,15 +83,15 @@ impl Object for MovingSphere {
         return false;
     }
 
-    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
+    fn bounding_box(&self, t_range: Range<f64>) -> Aabb {
         let box0 = Aabb::new(
-            self.center(t_min) - Vector::from(self.radius),
-            self.center(t_min) + Vector::from(self.radius),
+            self.center(t_range.start) - Vector::from(self.radius),
+            self.center(t_range.start) + Vector::from(self.radius),
         );
 
         let box1 = Aabb::new(
-            self.center(t_max) - Vector::from(self.radius),
-            self.center(t_max) + Vector::from(self.radius),
+            self.center(t_range.end) - Vector::from(self.radius),
+            self.center(t_range.end) + Vector::from(self.radius),
         );
 
         Aabb::surrounding_box(&box0, &box1)

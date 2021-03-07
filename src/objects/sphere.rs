@@ -3,6 +3,8 @@ use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 use std::f64::consts::PI;
 
+use std::ops::Range;
+
 use rand::prelude::*;
 
 pub struct Sphere {
@@ -32,8 +34,7 @@ impl Object for Sphere {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         _rng: &mut ThreadRng,
     ) -> bool {
@@ -46,7 +47,7 @@ impl Object for Sphere {
         if discriminant > 0.0 {
             let root = discriminant.sqrt();
             let mut temp = (-half_b - root) / a;
-            if t_min < temp && temp < t_max {
+            if t_range.start < temp && temp < t_range.end {
                 rec.t = temp;
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center) / self.radius;
@@ -56,7 +57,7 @@ impl Object for Sphere {
                 return true;
             }
             temp = (-half_b + root) / a;
-            if t_min < temp && temp < t_max {
+            if t_range.start < temp && temp < t_range.end {
                 rec.t = temp;
                 rec.p = ray.at(rec.t);
                 let outward_normal = (rec.p - self.center) / self.radius;
@@ -70,7 +71,7 @@ impl Object for Sphere {
         false
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+    fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {
         Aabb::new(
             self.center - Vector::from(self.radius),
             self.center + Vector::from(self.radius),

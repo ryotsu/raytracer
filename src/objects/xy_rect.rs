@@ -2,6 +2,8 @@ use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray, Vector};
 use crate::materials::Material;
 
+use std::ops::Range;
+
 use rand::prelude::*;
 
 pub struct XYRect {
@@ -30,13 +32,12 @@ impl Object for XYRect {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         _rng: &mut ThreadRng,
     ) -> bool {
         let t = (self.k - ray.origin.z()) / ray.direction.z();
-        if t < t_min || t > t_max {
+        if t < t_range.start || t > t_range.end {
             return false;
         }
 
@@ -56,7 +57,7 @@ impl Object for XYRect {
         true
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+    fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {
         Aabb::new(
             Point::new(self.x0, self.y0, self.k - 0.0001),
             Point::new(self.x1, self.y1, self.k + 0.0001),

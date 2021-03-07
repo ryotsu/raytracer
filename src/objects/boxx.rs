@@ -2,6 +2,7 @@ use super::{Aabb, FlipFace, HitRecord, HittableList, Object, XYRect, XZRect, YZR
 use crate::core::{Point, Ray};
 use crate::materials::Material;
 
+use std::ops::Range;
 use std::sync::Arc;
 
 use rand::prelude::*;
@@ -75,15 +76,14 @@ impl Object for Boxx {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool {
-        self.sides.hit(ray, t_min, t_max, rec, rng)
+        self.sides.hit(ray, t_range, rec, rng)
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+    fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {
         Aabb::new(self.min, self.max)
     }
 }

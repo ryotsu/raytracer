@@ -2,6 +2,7 @@ use super::{Aabb, HitRecord, Object};
 use crate::core::Ray;
 
 use std::cmp::Ordering;
+use std::ops::Range;
 use std::sync::Arc;
 
 use rand::prelude::*;
@@ -49,8 +50,8 @@ impl BVHNode {
             right = Arc::new(Self::new(&mut objects[mid..], t_min, t_max, rng));
         }
 
-        let box_left = left.bounding_box(t_min, t_max);
-        let box_right = right.bounding_box(t_min, t_max);
+        let box_left = left.bounding_box(t_min..t_max);
+        let box_right = right.bounding_box(t_min..t_max);
 
         let boxx = Aabb::surrounding_box(&box_left, &box_right);
 
@@ -62,31 +63,33 @@ impl Object for BVHNode {
     fn hit(
         &self,
         ray: &Ray,
-        t_min: f64,
-        t_max: f64,
+        t_range: Range<f64>,
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool {
-        if !self.boxx.hit(ray, t_min, t_max) {
+        if !self.boxx.hit(ray, t_range.start, t_range.end) {
             return false;
         }
 
-        let hit_left = self.left.hit(ray, t_min, t_max, rec, rng);
-        let hit_right = self
-            .right
-            .hit(ray, t_min, if hit_left { rec.t } else { t_max }, rec, rng);
+        let hit_left = self.left.hit(ray, t_range.clone(), rec, rng);
+        let hit_right = self.right.hit(
+            ray,
+            t_range.start..(if hit_left { rec.t } else { t_range.end }),
+            rec,
+            rng,
+        );
 
         hit_left || hit_right
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+    fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {
         self.boxx.clone()
     }
 }
 
 fn box_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>, axis: usize) -> Ordering {
-    let box_a = a.bounding_box(0.0, 0.0);
-    let box_b = b.bounding_box(0.0, 0.0);
+    let box_a = a.bounding_box(0.0..0.0);
+    let box_b = b.bounding_box(0.0..0.0);
 
     box_a.min[axis].partial_cmp(&box_b.min[axis]).unwrap()
 }
