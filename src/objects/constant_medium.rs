@@ -80,7 +80,7 @@ impl Object for ConstantMedium {
         true
     }
 
-    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool {
-        self.boundary.bounding_box(t_min, t_max, output_box)
+    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
+        self.boundary.bounding_box(t_min, t_max)
     }
 }

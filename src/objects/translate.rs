@@ -36,13 +36,10 @@ impl Object for Translate {
 
         true
     }
-    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool {
-        if !self.object.bounding_box(t_min, t_max, output_box) {
-            return false;
-        }
 
-        *output_box = Aabb::new(output_box.min + self.offset, output_box.max + self.offset);
+    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
+        let output_box = self.object.bounding_box(t_min, t_max);
 
-        true
+        Aabb::new(output_box.min + self.offset, output_box.max + self.offset)
     }
 }

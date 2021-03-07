@@ -81,7 +81,8 @@ impl Object for MovingSphere {
 
         return false;
     }
-    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool {
+
+    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
         let box0 = Aabb::new(
             self.center(t_min) - Vector::from(self.radius),
             self.center(t_min) + Vector::from(self.radius),
@@ -92,8 +93,6 @@ impl Object for MovingSphere {
             self.center(t_max) + Vector::from(self.radius),
         );
 
-        *output_box = Aabb::surrounding_box(&box0, &box1);
-
-        true
+        Aabb::surrounding_box(&box0, &box1)
     }
 }

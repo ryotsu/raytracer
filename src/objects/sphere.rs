@@ -70,12 +70,10 @@ impl Object for Sphere {
         false
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
-        *output_box = Aabb::new(
+    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+        Aabb::new(
             self.center - Vector::from(self.radius),
             self.center + Vector::from(self.radius),
-        );
-
-        true
+        )
     }
 }

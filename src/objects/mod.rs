@@ -41,5 +41,6 @@ pub trait Object: Send + Sync {
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool;
-    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool;
+
+    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb;
 }

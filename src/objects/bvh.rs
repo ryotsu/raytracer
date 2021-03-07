@@ -1,5 +1,5 @@
 use super::{Aabb, HitRecord, Object};
-use crate::core::{Point, Ray};
+use crate::core::Ray;
 
 use std::cmp::Ordering;
 use std::sync::Arc;
@@ -49,14 +49,8 @@ impl BVHNode {
             right = Arc::new(Self::new(&mut objects[mid..], t_min, t_max, rng));
         }
 
-        let mut box_left = Aabb::new(Point::from(0), Point::from(0));
-        let mut box_right = Aabb::new(Point::from(0), Point::from(0));
-
-        if !left.bounding_box(t_min, t_max, &mut box_left)
-            || !right.bounding_box(t_min, t_max, &mut box_right)
-        {
-            eprintln!("Not bounding box in BVHNode constructor");
-        }
+        let box_left = left.bounding_box(t_min, t_max);
+        let box_right = right.bounding_box(t_min, t_max);
 
         let boxx = Aabb::surrounding_box(&box_left, &box_right);
 
@@ -85,19 +79,14 @@ impl Object for BVHNode {
         hit_left || hit_right
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
-        *output_box = self.boxx.clone();
-        true
+    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+        self.boxx.clone()
     }
 }
 
 fn box_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>, axis: usize) -> Ordering {
-    let mut box_a = Aabb::new(Point::from(0), Point::from(0));
-    let mut box_b = Aabb::new(Point::from(0), Point::from(0));
-
-    if !a.bounding_box(0.0, 0.0, &mut box_a) || !b.bounding_box(0.0, 0.0, &mut box_b) {
-        eprintln!("No bounding box in BVHNode constructor.");
-    }
+    let box_a = a.bounding_box(0.0, 0.0);
+    let box_b = b.bounding_box(0.0, 0.0);
 
     box_a.min[axis].partial_cmp(&box_b.min[axis]).unwrap()
 }

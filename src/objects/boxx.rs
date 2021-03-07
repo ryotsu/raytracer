@@ -83,8 +83,7 @@ impl Object for Boxx {
         self.sides.hit(ray, t_min, t_max, rec, rng)
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
-        *output_box = Aabb::new(self.min, self.max);
-        true
+    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+        Aabb::new(self.min, self.max)
     }
 }

@@ -55,11 +55,11 @@ impl Object for XZRect {
         rec.p = ray.at(t);
         true
     }
-    fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
-        *output_box = Aabb::new(
+
+    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+        Aabb::new(
             Point::new(self.x0, self.k - 0.0001, self.z0),
             Point::new(self.x1, self.k + 0.0001, self.z1),
-        );
-        true
+        )
     }
 }

@@ -11,7 +11,6 @@ pub struct RotateY {
     object: Arc<dyn Object>,
     sin_theta: f64,
     cos_theta: f64,
-    hasbox: bool,
     bbox: Aabb,
 }
 
@@ -20,8 +19,7 @@ impl RotateY {
         let radians = degrees_to_radians(angle);
         let sin_theta = radians.sin();
         let cos_theta = radians.cos();
-        let mut bbox = Aabb::new(Point::from(0), Point::from(0));
-        let hasbox = object.bounding_box(0.0, 1.0, &mut bbox);
+        let mut bbox = object.bounding_box(0.0, 1.0);
 
         let mut min = Point::from(INFINITY);
         let mut max = Point::from(-INFINITY);
@@ -56,7 +54,6 @@ impl RotateY {
             object,
             sin_theta,
             cos_theta,
-            hasbox,
             bbox,
         }
     }
@@ -101,8 +98,7 @@ impl Object for RotateY {
         true
     }
 
-    fn bounding_box(&self, _t_min: f64, _t_max: f64, output_box: &mut Aabb) -> bool {
-        *output_box = self.bbox.clone();
-        self.hasbox
+    fn bounding_box(&self, _t_min: f64, _t_max: f64) -> Aabb {
+        self.bbox.clone()
     }
 }

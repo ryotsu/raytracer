@@ -45,27 +45,34 @@ impl Object for HittableList {
         return hit_anything;
     }
 
-    fn bounding_box(&self, t_min: f64, t_max: f64, output_box: &mut Aabb) -> bool {
-        if self.objects.is_empty() {
-            return false;
-        }
+    fn bounding_box(&self, t_min: f64, t_max: f64) -> Aabb {
+        // if self.objects.is_empty() {
+        //     return false;
+        // }
 
-        let mut temp_box = Aabb::new(Point::from(0), Point::from(0));
-        let mut first_box = true;
+        // let mut temp_box = Aabb::new(Point::from(0), Point::from(0));
+        // let mut first_box = true;
 
-        for object in self.objects.iter() {
-            if !object.bounding_box(t_min, t_max, &mut temp_box) {
-                return false;
-            }
-            *output_box = if first_box {
-                temp_box.clone()
-            } else {
-                Aabb::surrounding_box(output_box, &temp_box)
-            };
+        // for object in self.objects.iter() {
+        //     if !object.bounding_box(t_min, t_max, &mut temp_box) {
+        //         return false;
+        //     }
+        //     *output_box = if first_box {
+        //         temp_box.clone()
+        //     } else {
+        //         Aabb::surrounding_box(output_box, &temp_box)
+        //     };
 
-            first_box = false;
-        }
+        //     first_box = false;
+        // }
 
-        true
+        // true
+
+        self.objects
+            .iter()
+            .fold(Aabb::new(Point::from(0), Point::from(0)), |acc, x| {
+                let bounding_box = x.bounding_box(t_min, t_max);
+                Aabb::surrounding_box(&acc, &bounding_box)
+            })
     }
 }
