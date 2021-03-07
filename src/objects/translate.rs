@@ -2,22 +2,21 @@ use super::{Aabb, HitRecord, Object};
 use crate::core::{Ray, Vector};
 
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
-pub struct Translate {
-    object: Arc<dyn Object>,
+pub struct Translate<O> {
+    object: O,
     offset: Vector,
 }
 
-impl Translate {
-    pub fn new(object: Arc<dyn Object>, offset: Vector) -> Self {
+impl<O> Translate<O> {
+    pub fn new(object: O, offset: Vector) -> Self {
         Self { object, offset }
     }
 }
 
-impl Object for Translate {
+impl<O: Object> Object for Translate<O> {
     fn hit(
         &self,
         ray: &Ray,

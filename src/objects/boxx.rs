@@ -25,14 +25,14 @@ impl Boxx {
             max.z(),
             material.clone(),
         )));
-        sides.add(Arc::new(FlipFace::new(Arc::new(XYRect::new(
+        sides.add(Arc::new(FlipFace::new(XYRect::new(
             min.x(),
             max.x(),
             min.y(),
             max.y(),
             min.z(),
             material.clone(),
-        )))));
+        ))));
 
         sides.add(Arc::new(XZRect::new(
             min.x(),
@@ -42,14 +42,14 @@ impl Boxx {
             max.y(),
             material.clone(),
         )));
-        sides.add(Arc::new(FlipFace::new(Arc::new(XZRect::new(
+        sides.add(Arc::new(FlipFace::new(XZRect::new(
             min.x(),
             max.x(),
             min.z(),
             max.z(),
             min.y(),
             material.clone(),
-        )))));
+        ))));
 
         sides.add(Arc::new(YZRect::new(
             min.y(),
@@ -59,14 +59,14 @@ impl Boxx {
             max.x(),
             material.clone(),
         )));
-        sides.add(Arc::new(FlipFace::new(Arc::new(YZRect::new(
+        sides.add(Arc::new(FlipFace::new(YZRect::new(
             min.y(),
             max.y(),
             min.z(),
             max.z(),
             min.x(),
             material.clone(),
-        )))));
+        ))));
 
         Self { min, max, sides }
     }

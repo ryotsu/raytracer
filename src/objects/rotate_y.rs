@@ -4,19 +4,18 @@ use crate::utils::degrees_to_radians;
 
 use std::f64::INFINITY;
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
-pub struct RotateY {
-    object: Arc<dyn Object>,
+pub struct RotateY<O> {
+    object: O,
     sin_theta: f64,
     cos_theta: f64,
     bbox: Aabb,
 }
 
-impl RotateY {
-    pub fn new(object: Arc<dyn Object>, angle: f64) -> Self {
+impl<O: Object> RotateY<O> {
+    pub fn new(object: O, angle: f64) -> Self {
         let radians = degrees_to_radians(angle);
         let sin_theta = radians.sin();
         let cos_theta = radians.cos();
@@ -60,7 +59,7 @@ impl RotateY {
     }
 }
 
-impl Object for RotateY {
+impl<O: Object> Object for RotateY<O> {
     fn hit(
         &self,
         ray: &Ray,

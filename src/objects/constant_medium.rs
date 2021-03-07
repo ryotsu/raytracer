@@ -5,18 +5,17 @@ use crate::textures::Texture;
 
 use std::f64::{INFINITY, NEG_INFINITY};
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
-pub struct ConstantMedium {
-    boundary: Arc<dyn Object>,
+pub struct ConstantMedium<O> {
+    boundary: O,
     phase_function: Material,
     neg_inv_density: f64,
 }
 
-impl ConstantMedium {
-    pub fn new(boundary: Arc<dyn Object>, density: f64, texture: Texture) -> Self {
+impl<O> ConstantMedium<O> {
+    pub fn new(boundary: O, density: f64, texture: Texture) -> Self {
         Self {
             boundary,
             neg_inv_density: -1.0 / density,
@@ -25,7 +24,7 @@ impl ConstantMedium {
     }
 }
 
-impl Object for ConstantMedium {
+impl<O: Object> Object for ConstantMedium<O> {
     fn hit(
         &self,
         ray: &Ray,

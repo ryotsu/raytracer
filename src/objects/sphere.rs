@@ -7,6 +7,7 @@ use std::ops::Range;
 
 use rand::prelude::*;
 
+#[derive(Clone)]
 pub struct Sphere {
     center: Point,
     radius: f64,

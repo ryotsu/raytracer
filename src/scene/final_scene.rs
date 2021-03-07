@@ -71,19 +71,15 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
         Metal::new(Color::new(0.8, 0.8, 0.9), 10.0),
     )));
 
-    let boundary = Arc::new(Sphere::new(
-        Point::new(360, 150, 145),
-        70.0,
-        Dielectric::new(1.5),
-    ));
-    world.add(boundary.clone());
+    let boundary = Sphere::new(Point::new(360, 150, 145), 70.0, Dielectric::new(1.5));
+    world.add(Arc::new(boundary.clone()));
     world.add(Arc::new(ConstantMedium::new(
         boundary,
         0.2,
         SolidColor::new(0.2, 0.4, 0.9),
     )));
 
-    let boundary = Arc::new(Sphere::new(Point::from(0), 5000.0, Dielectric::new(1.5)));
+    let boundary = Sphere::new(Point::from(0), 5000.0, Dielectric::new(1.5));
     world.add(Arc::new(ConstantMedium::new(
         boundary,
         0.0001,
@@ -116,10 +112,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     }
 
     world.add(Arc::new(Translate::new(
-        Arc::new(RotateY::new(
-            Arc::new(BVHNode::new(&mut boxes2.objects[..], 0.0, 1.0, rng)),
-            15.0,
-        )),
+        RotateY::new(BVHNode::new(&mut boxes2.objects[..], 0.0, 1.0, rng), 15.0),
         Vector::new(-100, 270, 395),
     )));
 

@@ -2,21 +2,20 @@ use super::{Aabb, HitRecord, Object};
 use crate::core::Ray;
 
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
-pub struct FlipFace {
-    hittable: Arc<dyn Object>,
+pub struct FlipFace<O> {
+    object: O,
 }
 
-impl FlipFace {
-    pub fn new(hittable: Arc<dyn Object>) -> Self {
-        Self { hittable }
+impl<O> FlipFace<O> {
+    pub fn new(object: O) -> Self {
+        Self { object }
     }
 }
 
-impl Object for FlipFace {
+impl<O: Object> Object for FlipFace<O> {
     fn hit(
         &self,
         ray: &Ray,
@@ -24,7 +23,7 @@ impl Object for FlipFace {
         rec: &mut HitRecord,
         rng: &mut ThreadRng,
     ) -> bool {
-        if !self.hittable.hit(ray, t_range, rec, rng) {
+        if !self.object.hit(ray, t_range, rec, rng) {
             return false;
         }
 
@@ -33,6 +32,6 @@ impl Object for FlipFace {
     }
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb {
-        self.hittable.bounding_box(t_range)
+        self.object.bounding_box(t_range)
     }
 }
