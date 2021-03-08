@@ -42,13 +42,7 @@ impl MovingSphere {
 }
 
 impl Object for MovingSphere {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        _rng: &mut ThreadRng,
-    ) -> bool {
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, _rng: &mut ThreadRng) -> Option<HitRecord> {
         let oc = ray.origin - self.center(ray.time);
         let a = ray.direction.length_squared();
         let half_b = oc.dot(ray.direction);
@@ -61,26 +55,48 @@ impl Object for MovingSphere {
 
             let mut temp = (-half_b - root) / a;
             if t_range.start < temp && temp < t_range.end {
-                rec.t = temp;
-                rec.p = ray.at(rec.t);
-                let outward_normal = (rec.p - self.center(ray.time)) / self.radius;
-                rec.set_face_normal(ray, outward_normal);
-                rec.material = self.material.clone();
-                return true;
+                let t = temp;
+                let p = ray.at(t);
+                let outward_normal = (p - self.center(ray.time)) / self.radius;
+                let material = self.material.clone();
+
+                let mut hit_rec = HitRecord {
+                    t,
+                    u: 0.0,
+                    v: 0.0,
+                    p,
+                    normal: outward_normal,
+                    material,
+                    front_face: true,
+                };
+
+                hit_rec.set_face_normal(ray, outward_normal);
+                return Some(hit_rec);
             }
 
             temp = (-half_b + root) / a;
             if t_range.start < temp && temp < t_range.end {
-                rec.t = temp;
-                rec.p = ray.at(rec.t);
-                let outward_normal = (rec.p - self.center(ray.time)) / self.radius;
-                rec.set_face_normal(ray, outward_normal);
-                rec.material = self.material.clone();
-                return true;
+                let t = temp;
+                let p = ray.at(t);
+                let outward_normal = (p - self.center(ray.time)) / self.radius;
+                let material = self.material.clone();
+
+                let mut hit_rec = HitRecord {
+                    t,
+                    u: 0.0,
+                    v: 0.0,
+                    p,
+                    normal: outward_normal,
+                    material,
+                    front_face: true,
+                };
+
+                hit_rec.set_face_normal(ray, outward_normal);
+                return Some(hit_rec);
             }
         }
 
-        return false;
+        None
     }
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb {

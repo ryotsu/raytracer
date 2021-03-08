@@ -60,13 +60,7 @@ impl<O: Object> RotateY<O> {
 }
 
 impl<O: Object> Object for RotateY<O> {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        rng: &mut ThreadRng,
-    ) -> bool {
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
         let mut origin = ray.origin;
         let mut direction = ray.direction;
 
@@ -78,23 +72,23 @@ impl<O: Object> Object for RotateY<O> {
 
         let rotated_ray = Ray::new(origin, direction, ray.time);
 
-        if !self.object.hit(&rotated_ray, t_range, rec, rng) {
-            return false;
+        if let Some(mut rec) = self.object.hit(&rotated_ray, t_range, rng) {
+            let mut p = rec.p;
+            let mut normal = rec.normal;
+
+            p[0] = self.cos_theta * rec.p[0] + self.sin_theta * rec.p[2];
+            p[2] = -self.sin_theta * rec.p[0] + self.cos_theta * rec.p[2];
+
+            normal[0] = self.cos_theta * rec.normal[0] + self.sin_theta * rec.normal[2];
+            normal[2] = -self.sin_theta * rec.normal[0] + self.cos_theta * rec.normal[2];
+
+            rec.p = p;
+            rec.set_face_normal(&rotated_ray, normal);
+
+            Some(rec)
+        } else {
+            None
         }
-
-        let mut p = rec.p;
-        let mut normal = rec.normal;
-
-        p[0] = self.cos_theta * rec.p[0] + self.sin_theta * rec.p[2];
-        p[2] = -self.sin_theta * rec.p[0] + self.cos_theta * rec.p[2];
-
-        normal[0] = self.cos_theta * rec.normal[0] + self.sin_theta * rec.normal[2];
-        normal[2] = -self.sin_theta * rec.normal[0] + self.cos_theta * rec.normal[2];
-
-        rec.p = p;
-        rec.set_face_normal(&rotated_ray, normal);
-
-        true
     }
 
     fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {

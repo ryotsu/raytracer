@@ -32,13 +32,7 @@ impl Sphere {
 }
 
 impl Object for Sphere {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        _rng: &mut ThreadRng,
-    ) -> bool {
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, _rng: &mut ThreadRng) -> Option<HitRecord> {
         let oc = ray.origin - self.center;
         let a = ray.direction.length_squared();
         let half_b = oc.dot(ray.direction);
@@ -49,27 +43,49 @@ impl Object for Sphere {
             let root = discriminant.sqrt();
             let mut temp = (-half_b - root) / a;
             if t_range.start < temp && temp < t_range.end {
-                rec.t = temp;
-                rec.p = ray.at(rec.t);
-                let outward_normal = (rec.p - self.center) / self.radius;
-                rec.set_face_normal(ray, outward_normal);
-                Self::get_sphere_uv((rec.p - self.center) / self.radius, &mut rec.u, &mut rec.v);
-                rec.material = self.material.clone();
-                return true;
+                let t = temp;
+                let p = ray.at(t);
+                let outward_normal = (p - self.center) / self.radius;
+                let (mut u, mut v) = (0.0, 0.0);
+                Self::get_sphere_uv((p - self.center) / self.radius, &mut u, &mut v);
+                let material = self.material.clone();
+                let mut hit_rec = HitRecord {
+                    t,
+                    u,
+                    v,
+                    p,
+                    normal: outward_normal,
+                    material,
+                    front_face: true,
+                };
+
+                hit_rec.set_face_normal(ray, outward_normal);
+                return Some(hit_rec);
             }
             temp = (-half_b + root) / a;
             if t_range.start < temp && temp < t_range.end {
-                rec.t = temp;
-                rec.p = ray.at(rec.t);
-                let outward_normal = (rec.p - self.center) / self.radius;
-                rec.set_face_normal(ray, outward_normal);
-                Self::get_sphere_uv((rec.p - self.center) / self.radius, &mut rec.u, &mut rec.v);
-                rec.material = self.material.clone();
-                return true;
+                let t = temp;
+                let p = ray.at(t);
+                let outward_normal = (p - self.center) / self.radius;
+                let (mut u, mut v) = (0.0, 0.0);
+                Self::get_sphere_uv((p - self.center) / self.radius, &mut u, &mut v);
+                let material = self.material.clone();
+                let mut hit_rec = HitRecord {
+                    t,
+                    u,
+                    v,
+                    p,
+                    normal: outward_normal,
+                    material,
+                    front_face: true,
+                };
+
+                hit_rec.set_face_normal(ray, outward_normal);
+                return Some(hit_rec);
             }
         }
 
-        false
+        None
     }
 
     fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {

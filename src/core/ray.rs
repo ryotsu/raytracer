@@ -1,5 +1,5 @@
 use super::{Color, Point, Vector};
-use crate::objects::{HitRecord, Object};
+use crate::objects::Object;
 
 use std::f64::INFINITY;
 
@@ -36,19 +36,17 @@ impl Ray {
             return Color::from(0);
         }
 
-        let mut rec = HitRecord::new();
+        if let Some(rec) = world.hit(self, 0.001..INFINITY, rng) {
+            let emitted = rec.material.emitted(rec.u, rec.v, rec.p);
 
-        if !world.hit(self, 0.001..INFINITY, &mut rec, rng) {
-            return background;
-        }
-
-        let emitted = rec.material.emitted(rec.u, rec.v, rec.p);
-
-        match rec.material.scatter(self, &rec, rng) {
-            Some((attenuation, scattered)) => {
-                emitted + attenuation * scattered.color(background, world, depth - 1, rng)
+            match rec.material.scatter(self, &rec, rng) {
+                Some((attenuation, scattered)) => {
+                    emitted + attenuation * scattered.color(background, world, depth - 1, rng)
+                }
+                None => emitted,
             }
-            None => emitted,
+        } else {
+            background
         }
     }
 }

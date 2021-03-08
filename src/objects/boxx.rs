@@ -73,14 +73,8 @@ impl Boxx {
 }
 
 impl Object for Boxx {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        rng: &mut ThreadRng,
-    ) -> bool {
-        self.sides.hit(ray, t_range, rec, rng)
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
+        self.sides.hit(ray, t_range, rng)
     }
 
     fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {

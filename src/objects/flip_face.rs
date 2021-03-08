@@ -16,19 +16,13 @@ impl<O> FlipFace<O> {
 }
 
 impl<O: Object> Object for FlipFace<O> {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        rng: &mut ThreadRng,
-    ) -> bool {
-        if !self.object.hit(ray, t_range, rec, rng) {
-            return false;
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
+        if let Some(mut rec) = self.object.hit(ray, t_range, rng) {
+            rec.front_face = !rec.front_face;
+            Some(rec)
+        } else {
+            None
         }
-
-        rec.front_face = !rec.front_face;
-        true
     }
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb {

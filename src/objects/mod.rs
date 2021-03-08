@@ -35,8 +35,7 @@ use rand::prelude::*;
 use std::ops::Range;
 
 pub trait Object: Send + Sync {
-    fn hit(&self, ray: &Ray, t_range: Range<f64>, rec: &mut HitRecord, rng: &mut ThreadRng)
-        -> bool;
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord>;
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb;
 }

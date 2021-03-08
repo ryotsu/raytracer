@@ -23,26 +23,18 @@ impl HittableList {
 }
 
 impl Object for HittableList {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        rng: &mut ThreadRng,
-    ) -> bool {
-        let mut temp_rec = HitRecord::new();
-        let mut hit_anything = false;
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
+        let mut rec = None;
         let mut closest_so_far = t_range.end;
 
         for object in self.objects.iter() {
-            if object.hit(ray, t_range.start..closest_so_far, &mut temp_rec, rng) {
-                hit_anything = true;
+            if let Some(temp_rec) = object.hit(ray, t_range.start..closest_so_far, rng) {
                 closest_so_far = temp_rec.t;
-                *rec = temp_rec.box_clone();
+                rec = Some(temp_rec);
             }
         }
 
-        return hit_anything;
+        return rec;
     }
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb {

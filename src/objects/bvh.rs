@@ -60,26 +60,29 @@ impl BVHNode {
 }
 
 impl Object for BVHNode {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        rng: &mut ThreadRng,
-    ) -> bool {
+    fn hit(&self, ray: &Ray, mut t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
         if !self.boxx.hit(ray, t_range.start, t_range.end) {
-            return false;
+            return None;
         }
 
-        let hit_left = self.left.hit(ray, t_range.clone(), rec, rng);
-        let hit_right = self.right.hit(
-            ray,
-            t_range.start..(if hit_left { rec.t } else { t_range.end }),
-            rec,
-            rng,
-        );
+        let hit_left = self.left.hit(ray, t_range.clone(), rng);
 
-        hit_left || hit_right
+        if let Some(ref hl) = hit_left {
+            t_range.end = hl.t;
+        }
+
+        let hit_right = self.right.hit(ray, t_range, rng);
+
+        match (hit_left, hit_right) {
+            (h, None) | (None, h) => h,
+            (Some(hl), Some(hr)) => {
+                if hl.t < hr.t {
+                    Some(hl)
+                } else {
+                    Some(hr)
+                }
+            }
+        }
     }
 
     fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {

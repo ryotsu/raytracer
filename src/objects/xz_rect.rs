@@ -29,32 +29,37 @@ impl XZRect {
 }
 
 impl Object for XZRect {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        _rng: &mut ThreadRng,
-    ) -> bool {
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, _rng: &mut ThreadRng) -> Option<HitRecord> {
         let t = (self.k - ray.origin.y()) / ray.direction.y();
         if t < t_range.start || t > t_range.end {
-            return false;
+            return None;
         }
 
         let x = ray.origin.x() + t * ray.direction.x();
         let z = ray.origin.z() + t * ray.direction.z();
         if x < self.x0 || x > self.x1 || z < self.z0 || z > self.z1 {
-            return false;
+            return None;
         }
 
-        rec.u = (x - self.x0) / (self.x1 - self.x0);
-        rec.v = (z - self.z0) / (self.z1 - self.z0);
-        rec.t = t;
+        let u = (x - self.x0) / (self.x1 - self.x0);
+        let v = (z - self.z0) / (self.z1 - self.z0);
         let outward_normal = Vector::new(0, 1, 0);
-        rec.set_face_normal(ray, outward_normal);
-        rec.material = self.material.clone();
-        rec.p = ray.at(t);
-        true
+        let material = self.material.clone();
+        let p = ray.at(t);
+
+        let mut hit_rec = HitRecord {
+            t,
+            u,
+            v,
+            p,
+            normal: outward_normal,
+            material,
+            front_face: true,
+        };
+
+        hit_rec.set_face_normal(ray, outward_normal);
+
+        Some(hit_rec)
     }
 
     fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {

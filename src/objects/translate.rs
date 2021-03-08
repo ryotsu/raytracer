@@ -17,23 +17,16 @@ impl<O> Translate<O> {
 }
 
 impl<O: Object> Object for Translate<O> {
-    fn hit(
-        &self,
-        ray: &Ray,
-        t_range: Range<f64>,
-        rec: &mut HitRecord,
-        rng: &mut ThreadRng,
-    ) -> bool {
+    fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
         let moved_ray = Ray::new(ray.origin - self.offset, ray.direction, ray.time);
 
-        if !self.object.hit(&moved_ray, t_range, rec, rng) {
-            return false;
+        if let Some(mut rec) = self.object.hit(&moved_ray, t_range, rng) {
+            rec.p += self.offset;
+            rec.set_face_normal(&moved_ray, rec.normal);
+            Some(rec)
+        } else {
+            None
         }
-
-        rec.p += self.offset;
-        rec.set_face_normal(&moved_ray, rec.normal);
-
-        true
     }
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb {
