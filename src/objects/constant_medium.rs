@@ -1,6 +1,6 @@
 use super::{Aabb, HitRecord, Object};
 use crate::core::{Ray, Vector};
-use crate::materials::{Isotropic, Material};
+use crate::materials::Material;
 use crate::textures::Texture;
 
 use std::f64::{INFINITY, NEG_INFINITY};
@@ -19,7 +19,7 @@ impl<O> ConstantMedium<O> {
         Self {
             boundary,
             neg_inv_density: -1.0 / density,
-            phase_function: Isotropic::new(texture),
+            phase_function: Material::Isotropic { albedo: texture },
         }
     }
 }
@@ -55,7 +55,7 @@ impl<O: Object> Object for ConstantMedium<O> {
                 let p = ray.at(t);
                 let normal = Vector::new(1, 0, 0);
                 let front_face = true;
-                let material = self.phase_function.clone();
+                let material = &self.phase_function;
 
                 return Some(HitRecord {
                     t,

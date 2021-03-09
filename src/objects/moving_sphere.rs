@@ -58,7 +58,7 @@ impl Object for MovingSphere {
                 let t = temp;
                 let p = ray.at(t);
                 let outward_normal = (p - self.center(ray.time)) / self.radius;
-                let material = self.material.clone();
+                let material = &self.material;
 
                 let mut hit_rec = HitRecord {
                     t,
@@ -79,7 +79,7 @@ impl Object for MovingSphere {
                 let t = temp;
                 let p = ray.at(t);
                 let outward_normal = (p - self.center(ray.time)) / self.radius;
-                let material = self.material.clone();
+                let material = &self.material;
 
                 let mut hit_rec = HitRecord {
                     t,

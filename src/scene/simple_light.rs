@@ -1,5 +1,5 @@
 use crate::core::Point;
-use crate::materials::{DiffuseLight, Lambertian};
+use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::{Noise, SolidColor};
 
@@ -15,15 +15,19 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     world.add(Arc::new(Sphere::new(
         Point::new(0, -1000, 0),
         1000.0,
-        Lambertian::new(pertext.clone()),
+        Lambertian {
+            albedo: pertext.clone(),
+        },
     )));
     world.add(Arc::new(Sphere::new(
         Point::new(0, 2, 0),
         2.0,
-        Lambertian::new(pertext),
+        Lambertian { albedo: pertext },
     )));
 
-    let diffuse_light = DiffuseLight::new(SolidColor::from(4));
+    let diffuse_light = DiffuseLight {
+        emit: SolidColor::from(4),
+    };
     world.add(Arc::new(Sphere::new(
         Point::new(0, 7, 0),
         2.0,

@@ -44,7 +44,7 @@ impl Object for XYRect {
         let u = (x - self.x0) / (self.x1 - self.x0);
         let v = (y - self.y0) / (self.y1 - self.y0);
         let outward_normal = Vector::new(0, 0, 1);
-        let material = self.material.clone();
+        let material = &self.material;
         let p = ray.at(t);
 
         let mut hit_rec = HitRecord {

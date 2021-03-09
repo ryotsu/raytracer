@@ -1,5 +1,5 @@
 use crate::core::{Point, Vector};
-use crate::materials::{DiffuseLight, Lambertian};
+use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::SolidColor;
 
@@ -11,10 +11,18 @@ use rand::prelude::*;
 pub fn scene(_rng: &mut ThreadRng) -> HittableList {
     let mut world = HittableList::new();
 
-    let red = Lambertian::new(SolidColor::new(0.65, 0.05, 0.05));
-    let white = Lambertian::new(SolidColor::from(0.73));
-    let green = Lambertian::new(SolidColor::new(0.12, 0.45, 0.15));
-    let light = DiffuseLight::new(SolidColor::from(7));
+    let red = Lambertian {
+        albedo: SolidColor::new(0.65, 0.05, 0.05),
+    };
+    let white = Lambertian {
+        albedo: SolidColor::from(0.73),
+    };
+    let green = Lambertian {
+        albedo: SolidColor::new(0.12, 0.45, 0.15),
+    };
+    let light = DiffuseLight {
+        emit: SolidColor::from(7),
+    };
 
     world.add(Arc::new(FlipFace::new(YZRect::new(
         0.0, 555.0, 0.0, 555.0, 555.0, green,

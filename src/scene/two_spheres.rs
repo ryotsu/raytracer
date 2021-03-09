@@ -1,5 +1,5 @@
 use crate::core::Point;
-use crate::materials::Lambertian;
+use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::Noise;
 
@@ -16,13 +16,15 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     world.add(Arc::new(Sphere::new(
         Point::new(0, -1000, 0),
         1000.0,
-        Lambertian::new(pertext.clone()),
+        Lambertian {
+            albedo: pertext.clone(),
+        },
     )));
 
     world.add(Arc::new(Sphere::new(
         Point::new(0, 2, 0),
         2.0,
-        Lambertian::new(pertext),
+        Lambertian { albedo: pertext },
     )));
 
     world

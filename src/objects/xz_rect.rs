@@ -44,7 +44,7 @@ impl Object for XZRect {
         let u = (x - self.x0) / (self.x1 - self.x0);
         let v = (z - self.z0) / (self.z1 - self.z0);
         let outward_normal = Vector::new(0, 1, 0);
-        let material = self.material.clone();
+        let material = &self.material;
         let p = ray.at(t);
 
         let mut hit_rec = HitRecord {

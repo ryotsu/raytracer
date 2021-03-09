@@ -45,7 +45,7 @@ impl Object for YZRect {
         let v = (z - self.z0) / (self.z1 - self.z0);
         let t = t;
         let outward_normal = Vector::new(1, 0, 0);
-        let material = self.material.clone();
+        let material = &self.material;
         let p = ray.at(t);
 
         let mut hit_rec = HitRecord {

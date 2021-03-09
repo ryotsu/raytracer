@@ -48,7 +48,7 @@ impl Object for Sphere {
                 let outward_normal = (p - self.center) / self.radius;
                 let (mut u, mut v) = (0.0, 0.0);
                 Self::get_sphere_uv((p - self.center) / self.radius, &mut u, &mut v);
-                let material = self.material.clone();
+                let material = &self.material;
                 let mut hit_rec = HitRecord {
                     t,
                     u,
@@ -69,7 +69,7 @@ impl Object for Sphere {
                 let outward_normal = (p - self.center) / self.radius;
                 let (mut u, mut v) = (0.0, 0.0);
                 Self::get_sphere_uv((p - self.center) / self.radius, &mut u, &mut v);
-                let material = self.material.clone();
+                let material = &self.material;
                 let mut hit_rec = HitRecord {
                     t,
                     u,
