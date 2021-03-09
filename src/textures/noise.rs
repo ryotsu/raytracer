@@ -2,20 +2,20 @@ use super::perlin::Perlin;
 use super::Texture;
 use crate::core::{Color, Point};
 
-use std::sync::Arc;
+//use std::sync::Arc;
 
 use rand::prelude::*;
 
 #[derive(Clone)]
 pub struct Noise {
-    noise: Arc<Perlin>,
+    noise: Box<Perlin>,
     scale: f64,
 }
 
 impl Noise {
     pub fn new(scale: f64, rng: &mut ThreadRng) -> Texture {
         Texture::Noise(Self {
-            noise: Arc::new(Perlin::new(rng)),
+            noise: Box::new(Perlin::new(rng)),
             scale,
         })
     }
