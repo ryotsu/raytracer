@@ -16,7 +16,7 @@ fn main() {
     let samples_per_pixel = 100;
     let max_depth = 50;
 
-    println!("P3\n {} {}\n255", image_width, image_height);
+    println!("P3\n{} {}\n255", image_width, image_height);
 
     let mut rng = rand::thread_rng();
 
