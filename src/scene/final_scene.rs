@@ -37,12 +37,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
 
     let mut world = HittableList::new();
 
-    world.add(Arc::new(BVHNode::new(
-        &mut boxes.objects[..],
-        0.0,
-        1.0,
-        rng,
-    )));
+    world.add(Arc::new(Bvh::new(boxes.objects, 0.0..1.0, rng)));
 
     let light = DiffuseLight {
         emit: SolidColor::from(7.0),
@@ -131,7 +126,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     }
 
     world.add(Arc::new(Translate::new(
-        RotateY::new(BVHNode::new(&mut boxes2.objects[..], 0.0, 1.0, rng), 15.0),
+        RotateY::new(Bvh::new(boxes2.objects, 0.0..1.0, rng), 15.0),
         Vector::new(-100, 270, 395),
     )));
 

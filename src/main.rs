@@ -3,7 +3,7 @@ use rayon::prelude::*;
 use rand::prelude::*;
 
 use raytracer::core::{Camera, Color, Point, Vector};
-use raytracer::objects::BVHNode;
+use raytracer::objects::Bvh;
 use raytracer::scene;
 use std::f64::INFINITY;
 
@@ -20,8 +20,8 @@ fn main() {
 
     let mut rng = rand::thread_rng();
 
-    let mut world = scene::scene(&mut rng);
-    let world_bvh = BVHNode::new(&mut world.objects[..], 0.001, INFINITY, &mut rng);
+    let world = scene::scene(&mut rng);
+    let world_bvh = Bvh::new(world.objects, 0.001..INFINITY, &mut rng);
 
     let look_from = Point::new(478, 278, -600);
     let look_at = Point::new(278, 278, 0);

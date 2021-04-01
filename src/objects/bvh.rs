@@ -7,19 +7,24 @@ use std::sync::Arc;
 
 use rand::prelude::*;
 
-pub struct BVHNode {
-    left: Arc<dyn Object>,
-    right: Arc<dyn Object>,
-    boxx: Aabb,
+pub struct Bvh {
+    contents: BvhContents,
+    bounds: Aabb,
 }
 
-impl BVHNode {
+enum BvhContents {
+    Node { left: Box<Bvh>, right: Box<Bvh> },
+    Leaf(Arc<dyn Object>),
+}
+
+impl Bvh {
     pub fn new(
-        objects: &mut [Arc<dyn Object>],
-        t_min: f64,
-        t_max: f64,
+        mut objects: Vec<Arc<dyn Object>>,
+        t_range: Range<f64>,
         rng: &mut ThreadRng,
     ) -> Self {
+        use BvhContents::*;
+
         let axis = rng.gen_range(0, 3);
         let comparator = match axis {
             0 => box_x_compare,
@@ -29,64 +34,69 @@ impl BVHNode {
 
         let object_span = objects.len();
 
-        let left;
-        let right;
+        match object_span {
+            1 => Bvh {
+                bounds: objects[0].bounding_box(t_range.clone()),
+                contents: Leaf(objects.pop().unwrap()),
+            },
+            _ => {
+                objects.sort_by(comparator);
+                let right = Self::new(
+                    objects.drain(object_span / 2..).collect(),
+                    t_range.clone(),
+                    rng,
+                );
+                let left = Self::new(objects, t_range.clone(), rng);
+                let bounds = Aabb::surrounding_box(
+                    &left.bounding_box(t_range.clone()),
+                    &right.bounding_box(t_range),
+                );
 
-        if object_span == 1 {
-            left = objects[0].clone();
-            right = objects[0].clone();
-        } else if object_span == 2 {
-            if comparator(&objects[0], &objects[1]) == Ordering::Less {
-                left = objects[0].clone();
-                right = objects[1].clone();
-            } else {
-                left = objects[1].clone();
-                right = objects[0].clone();
-            }
-        } else {
-            objects.sort_by(comparator);
-            let mid = object_span / 2;
-            left = Arc::new(Self::new(&mut objects[0..mid], t_min, t_max, rng));
-            right = Arc::new(Self::new(&mut objects[mid..], t_min, t_max, rng));
-        }
-
-        let box_left = left.bounding_box(t_min..t_max);
-        let box_right = right.bounding_box(t_min..t_max);
-
-        let boxx = Aabb::surrounding_box(&box_left, &box_right);
-
-        Self { left, right, boxx }
-    }
-}
-
-impl Object for BVHNode {
-    fn hit(&self, ray: &Ray, mut t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
-        if !self.boxx.hit(ray, t_range.start, t_range.end) {
-            return None;
-        }
-
-        let hit_left = self.left.hit(ray, t_range.clone(), rng);
-
-        if let Some(ref hl) = hit_left {
-            t_range.end = hl.t;
-        }
-
-        let hit_right = self.right.hit(ray, t_range, rng);
-
-        match (hit_left, hit_right) {
-            (h, None) | (None, h) => h,
-            (Some(hl), Some(hr)) => {
-                if hl.t < hr.t {
-                    Some(hl)
-                } else {
-                    Some(hr)
+                Bvh {
+                    bounds,
+                    contents: Node {
+                        left: Box::new(left),
+                        right: Box::new(right),
+                    },
                 }
             }
         }
     }
+}
+
+impl Object for Bvh {
+    fn hit(&self, ray: &Ray, mut t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
+        if self.bounds.hit(ray, t_range.start, t_range.end) {
+            match &self.contents {
+                BvhContents::Node { left, right } => {
+                    let hit_left = left.hit(ray, t_range.clone(), rng);
+
+                    if let Some(ref hl) = hit_left {
+                        t_range.end = hl.t;
+                    }
+
+                    let hit_right = right.hit(ray, t_range, rng);
+
+                    match (hit_left, hit_right) {
+                        (h, None) | (None, h) => h,
+                        (Some(hl), Some(hr)) => {
+                            if hl.t < hr.t {
+                                Some(hl)
+                            } else {
+                                Some(hr)
+                            }
+                        }
+                    }
+                }
+                BvhContents::Leaf(obj) => obj.hit(ray, t_range, rng),
+            }
+        } else {
+            None
+        }
+    }
 
     fn bounding_box(&self, _t_range: Range<f64>) -> Aabb {
-        self.boxx.clone()
+        self.bounds.clone()
     }
 }
 

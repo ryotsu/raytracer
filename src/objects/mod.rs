@@ -17,7 +17,7 @@ use crate::core::Ray;
 
 pub use aabb::Aabb;
 pub use boxx::Boxx;
-pub use bvh::BVHNode;
+pub use bvh::Bvh;
 pub use constant_medium::ConstantMedium;
 pub use flip_face::FlipFace;
 pub use hit_record::HitRecord;
