@@ -2,8 +2,6 @@ use super::perlin::Perlin;
 use super::Texture;
 use crate::core::{Color, Point};
 
-//use std::sync::Arc;
-
 use rand::prelude::*;
 
 #[derive(Clone)]

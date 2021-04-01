@@ -1,4 +1,4 @@
-use crate::objects::HittableList;
+use crate::objects::ObjectList;
 
 mod cornell_box;
 mod cornell_smoke;
@@ -10,6 +10,6 @@ mod two_spheres;
 
 use rand::prelude::*;
 
-pub fn scene(rng: &mut ThreadRng) -> HittableList {
+pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     final_scene::scene(rng)
 }

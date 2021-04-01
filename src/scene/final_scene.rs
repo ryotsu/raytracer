@@ -6,8 +6,8 @@ use crate::textures::{Image, Noise, SolidColor};
 use rand::prelude::*;
 
 #[allow(dead_code)]
-pub fn scene(rng: &mut ThreadRng) -> HittableList {
-    let mut boxes = HittableList::new();
+pub fn scene(rng: &mut ThreadRng) -> ObjectList {
+    let mut boxes = ObjectList::new();
 
     let ground = Lambertian {
         albedo: SolidColor::new(0.48, 0.93, 0.53),
@@ -33,7 +33,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
         }
     }
 
-    let mut world = HittableList::new();
+    let mut world = ObjectList::new();
 
     world.add(Box::new(Bvh::new(boxes.objects, 0.0..1.0, rng)));
 
@@ -110,7 +110,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
         pertext,
     )));
 
-    let mut boxes2 = HittableList::new();
+    let mut boxes2 = ObjectList::new();
     let white = Lambertian {
         albedo: SolidColor::from(0.73),
     };

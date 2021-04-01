@@ -5,11 +5,11 @@ use std::ops::Range;
 
 use rand::prelude::*;
 
-pub struct HittableList {
+pub struct ObjectList {
     pub objects: Vec<Box<dyn Object>>,
 }
 
-impl HittableList {
+impl ObjectList {
     pub fn new() -> Self {
         Self {
             objects: Vec::new(),
@@ -21,7 +21,7 @@ impl HittableList {
     }
 }
 
-impl Object for HittableList {
+impl Object for ObjectList {
     fn hit(&self, ray: &Ray, t_range: Range<f64>, rng: &mut ThreadRng) -> Option<HitRecord> {
         let mut rec = None;
         let mut closest_so_far = t_range.end;

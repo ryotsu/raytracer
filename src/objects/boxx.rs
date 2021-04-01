@@ -1,4 +1,4 @@
-use super::{Aabb, FlipFace, HitRecord, HittableList, Object, XYRect, XZRect, YZRect};
+use super::{Aabb, FlipFace, HitRecord, Object, ObjectList, XYRect, XZRect, YZRect};
 use crate::core::{Point, Ray};
 use crate::materials::Material;
 
@@ -9,12 +9,12 @@ use rand::prelude::*;
 pub struct Boxx {
     min: Point,
     max: Point,
-    sides: HittableList,
+    sides: ObjectList,
 }
 
 impl Boxx {
     pub fn new(min: Point, max: Point, material: Material) -> Self {
-        let mut sides = HittableList::new();
+        let mut sides = ObjectList::new();
 
         sides.add(Box::new(XYRect::new(
             min.x(),

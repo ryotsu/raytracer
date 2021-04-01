@@ -6,8 +6,8 @@ use crate::textures::{Checker, SolidColor};
 use rand::prelude::*;
 
 #[allow(dead_code)]
-pub fn scene(rng: &mut ThreadRng) -> HittableList {
-    let mut world = HittableList::new();
+pub fn scene(rng: &mut ThreadRng) -> ObjectList {
+    let mut world = ObjectList::new();
 
     let checker = Checker::new(
         Box::new(SolidColor::new(0.2, 0.3, 0.1)),

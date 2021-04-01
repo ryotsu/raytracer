@@ -6,8 +6,8 @@ use crate::textures::Noise;
 use rand::prelude::*;
 
 #[allow(dead_code)]
-pub fn scene(rng: &mut ThreadRng) -> HittableList {
-    let mut world = HittableList::new();
+pub fn scene(rng: &mut ThreadRng) -> ObjectList {
+    let mut world = ObjectList::new();
 
     let pertext = Noise::new(5.0, rng);
 

@@ -6,8 +6,8 @@ use crate::textures::SolidColor;
 use rand::prelude::*;
 
 #[allow(dead_code)]
-pub fn scene(_rng: &mut ThreadRng) -> HittableList {
-    let mut world = HittableList::new();
+pub fn scene(_rng: &mut ThreadRng) -> ObjectList {
+    let mut world = ObjectList::new();
 
     let red = Lambertian {
         albedo: SolidColor::new(0.65, 0.05, 0.05),
