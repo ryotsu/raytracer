@@ -3,8 +3,6 @@ use crate::materials::Material::{self, *};
 use crate::objects::*;
 use crate::textures::{Checker, SolidColor};
 
-use std::sync::Arc;
-
 use rand::prelude::*;
 
 #[allow(dead_code)]
@@ -17,7 +15,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     );
 
     let ground_material = Lambertian { albedo: checker };
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(0, -1000, 0),
         1000.0,
         ground_material,
@@ -39,7 +37,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
                     let albedo = SolidColor::from_color(rng.gen::<Color>() * rng.gen::<Color>());
                     sphere_material = Lambertian { albedo };
                     let center_max = center + Vector::new(0, rng.gen_range(0.0, 0.5), 0);
-                    world.add(Arc::new(MovingSphere::new(
+                    world.add(Box::new(MovingSphere::new(
                         center,
                         center_max,
                         0.0,
@@ -51,28 +49,28 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
                     let albedo = Color::random_in(0.5, 1.0, rng);
                     let fuzz = rng.gen_range(0.0, 0.5);
                     sphere_material = Metal { albedo, fuzz };
-                    world.add(Arc::new(Sphere::new(center, 0.2, sphere_material)));
+                    world.add(Box::new(Sphere::new(center, 0.2, sphere_material)));
                 } else {
                     sphere_material = Dielectric { ref_index: 1.5 };
-                    world.add(Arc::new(Sphere::new(center, 0.2, sphere_material)));
+                    world.add(Box::new(Sphere::new(center, 0.2, sphere_material)));
                 }
             }
         }
     }
 
     let material1 = Dielectric { ref_index: 1.5 };
-    world.add(Arc::new(Sphere::new(Point::new(0, 1, 0), 1.0, material1)));
+    world.add(Box::new(Sphere::new(Point::new(0, 1, 0), 1.0, material1)));
 
     let material2 = Lambertian {
         albedo: SolidColor::new(0.4, 0.2, 0.1),
     };
-    world.add(Arc::new(Sphere::new(Point::new(-4, 1, 0), 1.0, material2)));
+    world.add(Box::new(Sphere::new(Point::new(-4, 1, 0), 1.0, material2)));
 
     let material3 = Metal {
         albedo: Color::new(0.7, 0.6, 0.5),
         fuzz: 0.0,
     };
-    world.add(Arc::new(Sphere::new(Point::new(4, 1, 0), 1.0, material3)));
+    world.add(Box::new(Sphere::new(Point::new(4, 1, 0), 1.0, material3)));
 
     world
 }

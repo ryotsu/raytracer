@@ -3,8 +3,6 @@ use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::{Image, Noise, SolidColor};
 
-use std::sync::Arc;
-
 use rand::prelude::*;
 
 #[allow(dead_code)]
@@ -27,7 +25,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
             let y1 = rng.gen_range(1.0, 101.0);
             let z1 = z0 + w;
 
-            boxes.add(Arc::new(Boxx::new(
+            boxes.add(Box::new(Boxx::new(
                 Point::new(x0, y0, z0),
                 Point::new(x1, y1, z1),
                 ground.clone(),
@@ -37,12 +35,12 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
 
     let mut world = HittableList::new();
 
-    world.add(Arc::new(Bvh::new(boxes.objects, 0.0..1.0, rng)));
+    world.add(Box::new(Bvh::new(boxes.objects, 0.0..1.0, rng)));
 
     let light = DiffuseLight {
         emit: SolidColor::from(7.0),
     };
-    world.add(Arc::new(XZRect::new(
+    world.add(Box::new(XZRect::new(
         123.0, 423.0, 147.0, 412.0, 554.0, light,
     )));
 
@@ -51,7 +49,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     let moving_sphere_material = Lambertian {
         albedo: SolidColor::new(0.7, 0.3, 0.1),
     };
-    world.add(Arc::new(MovingSphere::new(
+    world.add(Box::new(MovingSphere::new(
         center1,
         center2,
         0.0,
@@ -60,13 +58,13 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
         moving_sphere_material,
     )));
 
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(260, 150, 45),
         50.0,
         Dielectric { ref_index: 1.5 },
     )));
 
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(0, 150, 145),
         50.0,
         Metal {
@@ -80,15 +78,15 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
         70.0,
         Dielectric { ref_index: 1.5 },
     );
-    world.add(Arc::new(boundary.clone()));
-    world.add(Arc::new(ConstantMedium::new(
+    world.add(Box::new(boundary.clone()));
+    world.add(Box::new(ConstantMedium::new(
         boundary,
         0.2,
         SolidColor::new(0.2, 0.4, 0.9),
     )));
 
     let boundary = Sphere::new(Point::from(0), 5000.0, Dielectric { ref_index: 1.5 });
-    world.add(Arc::new(ConstantMedium::new(
+    world.add(Box::new(ConstantMedium::new(
         boundary,
         0.0001,
         SolidColor::from(1),
@@ -97,7 +95,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     let emat = Lambertian {
         albedo: Image::new("earthmap.jpg").unwrap(),
     };
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(400, 200, 400),
         100.0,
         emat,
@@ -106,7 +104,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     let pertext = Lambertian {
         albedo: Noise::new(0.05, rng),
     };
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(220, 280, 300),
         80.0,
         pertext,
@@ -118,14 +116,14 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
     };
     let ns = 1000;
     for _ in 0..ns {
-        boxes2.add(Arc::new(Sphere::new(
+        boxes2.add(Box::new(Sphere::new(
             Point::random_in(0.0, 165.0, rng),
             10.0,
             white.clone(),
         )));
     }
 
-    world.add(Arc::new(Translate::new(
+    world.add(Box::new(Translate::new(
         RotateY::new(Bvh::new(boxes2.objects, 0.0..1.0, rng), 15.0),
         Vector::new(-100, 270, 395),
     )));

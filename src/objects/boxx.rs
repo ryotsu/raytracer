@@ -3,7 +3,6 @@ use crate::core::{Point, Ray};
 use crate::materials::Material;
 
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
@@ -17,7 +16,7 @@ impl Boxx {
     pub fn new(min: Point, max: Point, material: Material) -> Self {
         let mut sides = HittableList::new();
 
-        sides.add(Arc::new(XYRect::new(
+        sides.add(Box::new(XYRect::new(
             min.x(),
             max.x(),
             min.y(),
@@ -25,7 +24,7 @@ impl Boxx {
             max.z(),
             material.clone(),
         )));
-        sides.add(Arc::new(FlipFace::new(XYRect::new(
+        sides.add(Box::new(FlipFace::new(XYRect::new(
             min.x(),
             max.x(),
             min.y(),
@@ -34,7 +33,7 @@ impl Boxx {
             material.clone(),
         ))));
 
-        sides.add(Arc::new(XZRect::new(
+        sides.add(Box::new(XZRect::new(
             min.x(),
             max.x(),
             min.z(),
@@ -42,7 +41,7 @@ impl Boxx {
             max.y(),
             material.clone(),
         )));
-        sides.add(Arc::new(FlipFace::new(XZRect::new(
+        sides.add(Box::new(FlipFace::new(XZRect::new(
             min.x(),
             max.x(),
             min.z(),
@@ -51,7 +50,7 @@ impl Boxx {
             material.clone(),
         ))));
 
-        sides.add(Arc::new(YZRect::new(
+        sides.add(Box::new(YZRect::new(
             min.y(),
             max.y(),
             min.z(),
@@ -59,7 +58,7 @@ impl Boxx {
             max.x(),
             material.clone(),
         )));
-        sides.add(Arc::new(FlipFace::new(YZRect::new(
+        sides.add(Box::new(FlipFace::new(YZRect::new(
             min.y(),
             max.y(),
             min.z(),

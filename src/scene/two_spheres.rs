@@ -3,8 +3,6 @@ use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::Noise;
 
-use std::sync::Arc;
-
 use rand::prelude::*;
 
 #[allow(dead_code)]
@@ -13,7 +11,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
 
     let pertext = Noise::new(5.0, rng);
 
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(0, -1000, 0),
         1000.0,
         Lambertian {
@@ -21,7 +19,7 @@ pub fn scene(rng: &mut ThreadRng) -> HittableList {
         },
     )));
 
-    world.add(Arc::new(Sphere::new(
+    world.add(Box::new(Sphere::new(
         Point::new(0, 2, 0),
         2.0,
         Lambertian { albedo: pertext },

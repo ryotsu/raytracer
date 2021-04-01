@@ -2,12 +2,11 @@ use super::{Aabb, HitRecord, Object};
 use crate::core::{Point, Ray};
 
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
 pub struct HittableList {
-    pub objects: Vec<Arc<dyn Object>>,
+    pub objects: Vec<Box<dyn Object>>,
 }
 
 impl HittableList {
@@ -17,7 +16,7 @@ impl HittableList {
         }
     }
 
-    pub fn add(&mut self, object: Arc<dyn Object>) {
+    pub fn add(&mut self, object: Box<dyn Object>) {
         self.objects.push(object);
     }
 }

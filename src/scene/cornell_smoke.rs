@@ -3,8 +3,6 @@ use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::SolidColor;
 
-use std::sync::Arc;
-
 use rand::prelude::*;
 
 #[allow(dead_code)]
@@ -24,14 +22,14 @@ pub fn scene(_rng: &mut ThreadRng) -> HittableList {
         emit: SolidColor::from(7),
     };
 
-    world.add(Arc::new(FlipFace::new(YZRect::new(
+    world.add(Box::new(FlipFace::new(YZRect::new(
         0.0, 555.0, 0.0, 555.0, 555.0, green,
     ))));
-    world.add(Arc::new(YZRect::new(0.0, 555.0, 0.0, 555.0, 0.0, red)));
-    world.add(Arc::new(XZRect::new(
+    world.add(Box::new(YZRect::new(0.0, 555.0, 0.0, 555.0, 0.0, red)));
+    world.add(Box::new(XZRect::new(
         113.0, 443.0, 127.0, 432.0, 554.0, light,
     )));
-    world.add(Arc::new(FlipFace::new(XZRect::new(
+    world.add(Box::new(FlipFace::new(XZRect::new(
         0.0,
         555.0,
         0.0,
@@ -39,7 +37,7 @@ pub fn scene(_rng: &mut ThreadRng) -> HittableList {
         555.0,
         white.clone(),
     ))));
-    world.add(Arc::new(XZRect::new(
+    world.add(Box::new(XZRect::new(
         0.0,
         555.0,
         0.0,
@@ -47,7 +45,7 @@ pub fn scene(_rng: &mut ThreadRng) -> HittableList {
         0.0,
         white.clone(),
     )));
-    world.add(Arc::new(FlipFace::new(XYRect::new(
+    world.add(Box::new(FlipFace::new(XYRect::new(
         0.0,
         555.0,
         0.0,
@@ -64,13 +62,13 @@ pub fn scene(_rng: &mut ThreadRng) -> HittableList {
     let box2 = RotateY::new(box2, -18.0);
     let box2 = Translate::new(box2, Vector::new(130, 0, 65));
 
-    world.add(Arc::new(ConstantMedium::new(
+    world.add(Box::new(ConstantMedium::new(
         box1,
         0.01,
         SolidColor::from(0),
     )));
 
-    world.add(Arc::new(ConstantMedium::new(
+    world.add(Box::new(ConstantMedium::new(
         box2,
         0.01,
         SolidColor::from(1),

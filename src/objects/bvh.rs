@@ -3,7 +3,6 @@ use crate::core::Ray;
 
 use std::cmp::Ordering;
 use std::ops::Range;
-use std::sync::Arc;
 
 use rand::prelude::*;
 
@@ -14,12 +13,12 @@ pub struct Bvh {
 
 enum BvhContents {
     Node { left: Box<Bvh>, right: Box<Bvh> },
-    Leaf(Arc<dyn Object>),
+    Leaf(Box<dyn Object>),
 }
 
 impl Bvh {
     pub fn new(
-        mut objects: Vec<Arc<dyn Object>>,
+        mut objects: Vec<Box<dyn Object>>,
         t_range: Range<f64>,
         rng: &mut ThreadRng,
     ) -> Self {
@@ -100,21 +99,21 @@ impl Object for Bvh {
     }
 }
 
-fn box_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>, axis: usize) -> Ordering {
+fn box_compare(a: &Box<dyn Object>, b: &Box<dyn Object>, axis: usize) -> Ordering {
     let box_a = a.bounding_box(0.0..0.0);
     let box_b = b.bounding_box(0.0..0.0);
 
     box_a.min[axis].partial_cmp(&box_b.min[axis]).unwrap()
 }
 
-fn box_x_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>) -> Ordering {
+fn box_x_compare(a: &Box<dyn Object>, b: &Box<dyn Object>) -> Ordering {
     box_compare(a, b, 0)
 }
 
-fn box_y_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>) -> Ordering {
+fn box_y_compare(a: &Box<dyn Object>, b: &Box<dyn Object>) -> Ordering {
     box_compare(a, b, 1)
 }
 
-fn box_z_compare(a: &Arc<dyn Object>, b: &Arc<dyn Object>) -> Ordering {
+fn box_z_compare(a: &Box<dyn Object>, b: &Box<dyn Object>) -> Ordering {
     box_compare(a, b, 2)
 }

@@ -3,8 +3,6 @@ use crate::materials::Material::*;
 use crate::objects::*;
 use crate::textures::Image;
 
-use std::sync::Arc;
-
 use rand::prelude::*;
 
 #[allow(dead_code)]
@@ -14,7 +12,7 @@ pub fn scene(_rng: &mut ThreadRng) -> HittableList {
     let earth_surace = Lambertian {
         albedo: earth_texture,
     };
-    let globe = Arc::new(Sphere::new(Point::from(0), 2.0, earth_surace));
+    let globe = Box::new(Sphere::new(Point::from(0), 2.0, earth_surace));
 
     world.add(globe);
 
