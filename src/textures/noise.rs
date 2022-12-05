@@ -11,7 +11,7 @@ pub struct Noise {
 }
 
 impl Noise {
-    pub fn new(scale: f64, rng: &mut ThreadRng) -> Texture {
+    pub fn new_texture(scale: f64, rng: &mut ThreadRng) -> Texture {
         Texture::Noise(Self {
             noise: Box::new(Perlin::new(rng)),
             scale,

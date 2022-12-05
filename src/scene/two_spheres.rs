@@ -9,7 +9,7 @@ use rand::prelude::*;
 pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     let mut world = ObjectList::new();
 
-    let pertext = Noise::new(5.0, rng);
+    let pertext = Noise::new_texture(5.0, rng);
 
     world.add(Box::new(Sphere::new(
         Point::new(0, -1000, 0),

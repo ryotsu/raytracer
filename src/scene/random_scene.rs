@@ -9,8 +9,8 @@ use rand::prelude::*;
 pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     let mut world = ObjectList::new();
 
-    let checker = Checker::new(
-        Box::new(SolidColor::new(0.2, 0.3, 0.1)),
+    let checker = Checker::new_texture(
+        Box::new(SolidColor::new_texture(0.2, 0.3, 0.1)),
         Box::new(SolidColor::from(0.9)),
     );
 
@@ -62,7 +62,7 @@ pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     world.add(Box::new(Sphere::new(Point::new(0, 1, 0), 1.0, material1)));
 
     let material2 = Lambertian {
-        albedo: SolidColor::new(0.4, 0.2, 0.1),
+        albedo: SolidColor::new_texture(0.4, 0.2, 0.1),
     };
     world.add(Box::new(Sphere::new(Point::new(-4, 1, 0), 1.0, material2)));
 

@@ -10,7 +10,7 @@ pub struct Image {
 }
 
 impl Image {
-    pub fn new(filename: &str) -> Result<Texture, ImageError> {
+    pub fn new_image(filename: &str) -> Result<Texture, ImageError> {
         let img = image::open(filename)?;
         Ok(Texture::Image(Self { img: Box::new(img) }))
     }

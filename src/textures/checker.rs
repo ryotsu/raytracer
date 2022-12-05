@@ -8,7 +8,7 @@ pub struct Checker {
 }
 
 impl Checker {
-    pub fn new(even: Box<Texture>, odd: Box<Texture>) -> Texture {
+    pub fn new_texture(even: Box<Texture>, odd: Box<Texture>) -> Texture {
         Texture::Checker(Self { even, odd })
     }
 

@@ -11,10 +11,10 @@ fn main() {
     let background = Color::from(0);
 
     let aspect_ratio = 16.0 / 9.0;
-    let image_width = 1920 as u16;
+    let image_width = 1920;
     let image_height = (image_width as f64 / aspect_ratio) as u16;
-    let samples_per_pixel = 100;
-    let max_depth = 50;
+    let samples_per_pixel = 50;
+    let max_depth = 20;
 
     println!("P3\n{} {}\n255", image_width, image_height);
 
@@ -57,14 +57,11 @@ fn main() {
                 }
                 pixel_color.write_color(samples_per_pixel)
             })
-            .reduce(
-                || String::new(),
-                |mut acc, val| {
-                    acc.push_str(&val);
-                    acc.push(' ');
-                    acc
-                },
-            );
+            .reduce(String::new, |mut acc, val| {
+                acc.push_str(&val);
+                acc.push(' ');
+                acc
+            });
 
         println!("{}", line);
     }

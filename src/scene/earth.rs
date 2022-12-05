@@ -8,7 +8,7 @@ use rand::prelude::*;
 #[allow(dead_code)]
 pub fn scene(_rng: &mut ThreadRng) -> ObjectList {
     let mut world = ObjectList::new();
-    let earth_texture = Image::new("earthmap.jpg").unwrap();
+    let earth_texture = Image::new_image("earthmap.jpg").unwrap();
     let earth_surace = Lambertian {
         albedo: earth_texture,
     };

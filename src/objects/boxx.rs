@@ -64,7 +64,7 @@ impl Boxx {
             min.z(),
             max.z(),
             min.x(),
-            material.clone(),
+            material,
         ))));
 
         Self { min, max, sides }

@@ -10,7 +10,7 @@ pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     let mut boxes = ObjectList::new();
 
     let ground = Lambertian {
-        albedo: SolidColor::new(0.48, 0.93, 0.53),
+        albedo: SolidColor::new_texture(0.48, 0.93, 0.53),
     };
 
     let boxes_per_side = 20;
@@ -47,7 +47,7 @@ pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     let center1 = Point::new(400.0, 400.0, 200.0);
     let center2 = center1 + Vector::new(30.0, 0.0, 0.0);
     let moving_sphere_material = Lambertian {
-        albedo: SolidColor::new(0.7, 0.3, 0.1),
+        albedo: SolidColor::new_texture(0.7, 0.3, 0.1),
     };
     world.add(Box::new(MovingSphere::new(
         center1,
@@ -82,7 +82,7 @@ pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     world.add(Box::new(ConstantMedium::new(
         boundary,
         0.2,
-        SolidColor::new(0.2, 0.4, 0.9),
+        SolidColor::new_texture(0.2, 0.4, 0.9),
     )));
 
     let boundary = Sphere::new(Point::from(0), 5000.0, Dielectric { ref_index: 1.5 });
@@ -93,7 +93,7 @@ pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     )));
 
     let emat = Lambertian {
-        albedo: Image::new("earthmap.jpg").unwrap(),
+        albedo: Image::new_image("earthmap.jpg").unwrap(),
     };
     world.add(Box::new(Sphere::new(
         Point::new(400, 200, 400),
@@ -102,7 +102,7 @@ pub fn scene(rng: &mut ThreadRng) -> ObjectList {
     )));
 
     let pertext = Lambertian {
-        albedo: Noise::new(0.05, rng),
+        albedo: Noise::new_texture(0.05, rng),
     };
     world.add(Box::new(Sphere::new(
         Point::new(220, 280, 300),

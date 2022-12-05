@@ -10,13 +10,13 @@ pub fn scene(_rng: &mut ThreadRng) -> ObjectList {
     let mut world = ObjectList::new();
 
     let red = Lambertian {
-        albedo: SolidColor::new(0.65, 0.05, 0.05),
+        albedo: SolidColor::new_texture(0.65, 0.05, 0.05),
     };
     let white = Lambertian {
         albedo: SolidColor::from(0.73),
     };
     let green = Lambertian {
-        albedo: SolidColor::new(0.12, 0.45, 0.15),
+        albedo: SolidColor::new_texture(0.12, 0.45, 0.15),
     };
     let light = DiffuseLight {
         emit: SolidColor::from(15),
@@ -59,7 +59,7 @@ pub fn scene(_rng: &mut ThreadRng) -> ObjectList {
     let box1 = Box::new(Translate::new(box1, Vector::new(265, 0, 295)));
     world.add(box1);
 
-    let box2 = Boxx::new(Point::from(0), Point::from(165), white.clone());
+    let box2 = Boxx::new(Point::from(0), Point::from(165), white);
     let box2 = RotateY::new(box2, -18.0);
     let box2 = Box::new(Translate::new(box2, Vector::new(130, 0, 65)));
     world.add(box2);

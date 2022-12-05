@@ -5,6 +5,7 @@ use std::ops::Range;
 
 use rand::prelude::*;
 
+#[derive(Default)]
 pub struct ObjectList {
     pub objects: Vec<Box<dyn Object>>,
 }
@@ -33,7 +34,7 @@ impl Object for ObjectList {
             }
         }
 
-        return rec;
+        rec
     }
 
     fn bounding_box(&self, t_range: Range<f64>) -> Aabb {

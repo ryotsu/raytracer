@@ -7,14 +7,18 @@ pub struct SolidColor {
 }
 
 impl SolidColor {
-    pub fn new<T: Into<f64>, U: Into<f64>, V: Into<f64>>(red: T, green: U, blue: V) -> Texture {
+    pub fn new_texture<T: Into<f64>, U: Into<f64>, V: Into<f64>>(
+        red: T,
+        green: U,
+        blue: V,
+    ) -> Texture {
         Texture::SolidColor(Self {
             color: Color::new(red, green, blue),
         })
     }
 
     pub fn from<T: Into<f64> + Copy>(a: T) -> Texture {
-        Self::new(a, a, a)
+        Self::new_texture(a, a, a)
     }
 
     pub fn from_color(color: Color) -> Texture {

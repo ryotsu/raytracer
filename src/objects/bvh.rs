@@ -35,7 +35,7 @@ impl Bvh {
 
         match object_span {
             1 => Bvh {
-                bounds: objects[0].bounding_box(t_range.clone()),
+                bounds: objects[0].bounding_box(t_range),
                 contents: Leaf(objects.pop().unwrap()),
             },
             _ => {
