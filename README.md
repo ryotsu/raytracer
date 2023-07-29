@@ -1,6 +1,6 @@
-# Raytracer
+# Ray Tracer
 
-Implementation of the raytracer from the book: [Raytracing in One Weekend](https://raytracing.github.io) in Rust.
+Implementation of the ray tracer from the book: [Ray Tracing The Next Week](https://raytracing.github.io) in Rust.
 
 ![Generated image](image.png)
 
